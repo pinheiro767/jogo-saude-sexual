@@ -1,2115 +1,487 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabuleiro Imersivo - Educação Sexual</title>
-    <script src="/_sdk/element_sdk.js"></script>
+    <title>Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* [ESTILOS CSS INICIAIS - MANTIDOS] */
-        body {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: transparent;
-            min-height: 100%;
-            color: #333;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .bubbles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .bubble:nth-child(1) {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .bubble:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-            left: 20%;
-            animation-delay: 2s;
-        }
-
-        .bubble:nth-child(3) {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #45b7d1, #96c93d);
-            left: 35%;
-            animation-delay: 4s;
-        }
-
-        .bubble:nth-child(4) {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #96ceb4, #feca57);
-            left: 50%;
-            animation-delay: 0s;
-        }
-
-        .bubble:nth-child(5) {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #feca57, #ff9ff3);
-            left: 70%;
-            animation-delay: 3s;
-        }
-
-        .bubble:nth-child(6) {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #ff9ff3, #667eea);
-            left: 80%;
-            animation-delay: 5s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            50% {
-                transform: translateY(-10vh) rotate(180deg);
-                opacity: 0.8;
-            }
-        }
-
-        /* Efeitos Visuais de Áudio */
-        .music-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .music-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
-        }
-
-        .music-button.playing {
-            animation: music-pulse 2s infinite;
-        }
-
-        @keyframes music-pulse {
-            0%, 100% {
-                box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 0 0 0 rgba(102, 126, 234, 0.7);
-            }
-            50% {
-                box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 0 0 15px rgba(102, 126, 234, 0);
-            }
-        }
-
-        .sound-waves {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2000;
-        }
-
-        .sound-wave {
-            position: absolute;
-            border: 3px solid;
-            border-radius: 50%;
-            animation: sound-wave-expand 1.5s ease-out forwards;
-        }
-
-        @keyframes sound-wave-expand {
-            0% {
-                width: 20px;
-                height: 20px;
-                opacity: 1;
-            }
-            100% {
-                width: 300px;
-                height: 300px;
-                opacity: 0;
-            }
-        }
-
-        .dice-visual-effect {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 4rem;
-            z-index: 2500;
-            pointer-events: none;
-            animation: dice-bounce 1s ease-out forwards;
-        }
-
-        @keyframes dice-bounce {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            20% {
-                transform: translate(-50%, -50%) scale(1.3) rotate(90deg);
-                opacity: 1;
-            }
-            40% {
-                transform: translate(-50%, -50%) scale(0.8) rotate(180deg);
-                opacity: 1;
-            }
-            60% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(270deg);
-                opacity: 1;
-            }
-            80% {
-                transform: translate(-50%, -50%) scale(0.9) rotate(360deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0) rotate(450deg);
-                opacity: 0;
-            }
-        }
-
-        .move-trail {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: radial-gradient(circle, #4299e1, #3182ce, transparent);
-            border-radius: 50%;
-            animation: move-trail-fade 1s ease-out forwards;
-            z-index: 15;
-        }
-
-        @keyframes move-trail-fade {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-                box-shadow: 0 0 15px #4299e1;
-            }
-            50% {
-                transform: scale(1.5);
-                opacity: 0.7;
-                box-shadow: 0 0 25px #4299e1;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-                box-shadow: 0 0 5px #4299e1;
-            }
-        }
-
-        .coin-visual-effect {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            z-index: 2600;
-            pointer-events: none;
-            animation: coin-spin 2s ease-out forwards;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
-        }
-
-        @keyframes coin-spin {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotateY(0deg);
-                opacity: 0;
-            }
-            15% {
-                transform: translate(-50%, -50%) scale(1.5) rotateY(180deg);
-                opacity: 1;
-            }
-            30% {
-                transform: translate(-50%, -50%) scale(1) rotateY(360deg);
-                opacity: 1;
-            }
-             45% {
-                transform: translate(-50%, -50%) scale(1.3) rotateY(540deg);
-                opacity: 1;
-            }
-            60% {
-                transform: translate(-50%, -50%) scale(0.8) rotateY(720deg);
-                opacity: 1;
-            }
-            75% {
-                transform: translate(-50%, -50%) scale(1.1) rotateY(900deg);
-                opacity: 1;
-            }
-            90% {
-                transform: translate(-50%, -50%) scale(0.9) rotateY(1080deg);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0) rotateY(1260deg);
-                opacity: 0;
-            }
-        }
-
-        .error-visual-effect {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            z-index: 2600;
-            pointer-events: none;
-            animation: error-shake 1.5s ease-out forwards;
-            text-shadow: 0 0 20px rgba(255, 69, 0, 0.9);
-        }
-
-        @keyframes error-shake {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
-            }
-            10% {
-                transform: translate(-50%, -50%) scale(1.3);
-                opacity: 1;
-            }
-            15% {
-                transform: translate(-45%, -50%) scale(1.2);
-                opacity: 1;
-            }
-            25% {
-                transform: translate(-55%, -50%) scale(1.1);
-                opacity: 1;
-            }
-            35% {
-                transform: translate(-48%, -50%) scale(1.2);
-                opacity: 1;
-            }
-            45% {
-                transform: translate(-52%, -50%) scale(1.1);
-                opacity: 1;
-            }
-            55% {
-                transform: translate(-49%, -50%) scale(1.15);
-                opacity: 1;
-            }
-            65% {
-                transform: translate(-51%, -50%) scale(1.05);
-                opacity: 1;
-            }
-            75% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.8;
-            }
-            85% {
-                transform: translate(-50%, -50%) scale(0.8);
-                opacity: 0.5;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
-            }
-        }
-
-        .victory-visual-effect {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6rem;
-            z-index: 2700;
-            pointer-events: none;
-            animation: victory-celebration 3s ease-out forwards;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 1);
-        }
-
-        @keyframes victory-celebration {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            15% {
-                transform: translate(-50%, -50%) scale(1.5) rotate(72deg);
-                opacity: 1;
-            }
-            30% {
-                transform: translate(-50%, -50%) scale(1.2) rotate(144deg);
-                opacity: 1;
-            }
-            45% {
-                transform: translate(-50%, -50%) scale(1.4) rotate(216deg);
-                opacity: 1;
-            }
-            60% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(288deg);
-                opacity: 1;
-            }
-            75% {
-                transform: translate(-50%, -50%) scale(1.3) rotate(360deg);
-                opacity: 1;
-            }
-            85% {
-                transform: translate(-50%, -50%) scale(1) rotate(432deg);
-                opacity: 0.8;
-            }
-            95% {
-                transform: translate(-50%, -50%) scale(0.7) rotate(504deg);
-                opacity: 0.4;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0) rotate(576deg);
-                opacity: 0;
-            }
-        }
-
-        .roulette-glow {
-            animation: roulette-glow-pulse 0.5s ease-in-out;
-        }
-
-        @keyframes roulette-glow-pulse {
-            0% {
-                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            }
-            50% {
-                box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 0 30px rgba(255, 215, 0, 0.8);
-            }
-            100% {
-                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            }
-        }
-
-        .player-move-glow {
-            animation: player-move-glow 1s ease-out;
-        }
-
-        @keyframes player-move-glow {
-            0% {
-                box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-            }
-            50% {
-                box-shadow: 0 3px 6px rgba(0,0,0,0.4), 0 0 20px rgba(66, 153, 225, 0.8);
-            }
-            100% {
-                box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-            }
-        }
-
-        .game-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .game-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .game-title {
-            font-size: 2.8rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .instructions {
-            font-size: 1.2rem;
-            color: #4a5568;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .players-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            gap: 20px;
-        }
-
-        .player-card {
-            flex: 1;
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .player-card.active {
-            border-color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            transform: scale(1.05);
-        }
-
-        .player-card.player2 {
-            background: linear-gradient(135deg, #e53e3e, #c53030);
-        }
-
-        .player-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .player-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 15px;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 1.1rem;
-        }
-
-        .coins {
-            color: #ffd700;
-        }
-
-        .bombs {
-            color: #ff6b6b;
-        }
-
-        .board-container {
-            position: relative;
-            margin: 30px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-            overflow: visible;
-            min-height: 700px;
-        }
-
-        .board {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 15px;
-            background: transparent;
-            padding: 40px;
-            border-radius: 50%;
-            width: 600px;
-            height: 600px;
-            position: relative;
-            justify-content: center;
-            align-items: center;
-            overflow: visible;
-            contain: layout;
-        }
-
-        .square {
-            width: 80px;
-            height: 100px;
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: absolute;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            animation: float-gentle 3s ease-in-out infinite;
-            overflow: visible;
-            background: white;
-        }
-
-        .character-card {
-            position: absolute;
-            top: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 140px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            border: 3px solid #4299e1;
-            animation: cardAppear 0.5s ease-out;
-            pointer-events: none;
-        }
-
-        .character-card.show {
-            display: flex;
-        }
-
-        .character-card.happy {
-            border-color: #48bb78;
-            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
-        }
-
-        .character-card.sad {
-            border-color: #e53e3e;
-            background: linear-gradient(135deg, #fff5f5, #fed7d7);
-        }
-
-        @keyframes cardAppear {
-            0% {
-                transform: translateX(-50%) scale(0) rotate(180deg);
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(-50%) scale(1) rotate(0deg);
-                opacity: 1;
-            }
-        }
-
-        .character-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            transition: all 0.3s ease;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .character-avatar.has-image {
-            font-size: 0;
-        }
-
-        .character-avatar.happy {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            animation: bounce 0.6s ease-in-out;
-        }
-
-        .character-avatar.sad {
-            background: linear-gradient(135deg, #e53e3e, #c53030);
-            animation: shake 0.6s ease-in-out;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .explosion-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(255,140,0,0.6) 30%, rgba(255,215,0,0.4) 60%, transparent 100%);
-            z-index: 2000;
-            display: none;
-            animation: explode 1.5s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes explode {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            20% {
-                transform: scale(0.5);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(3);
-                opacity: 0;
-            }
-        }
-
-        .explosion-particles {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            pointer-events: none;
-            z-index: 2001;
-        }
-
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #ff4500;
-            border-radius: 50%;
-            animation: particle-explosion 1.5s ease-out forwards;
-        }
-
-        @keyframes particle-explosion {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--end-x, 100px), var(--end-y, 100px)) scale(0);
-            }
-        }
-
-        .screen-shake {
-            animation: screen-shake 0.8s ease-in-out;
-        }
-
-        @keyframes screen-shake {
-            0%, 100% { transform: translateX(0); }
-            10% { transform: translateX(-10px) translateY(-5px); }
-            20% { transform: translateX(10px) translateY(5px); }
-            30% { transform: translateX(-8px) translateY(-3px); }
-            40% { transform: translateX(8px) translateY(3px); }
-            50% { transform: translateX(-6px) translateY(-2px); }
-            60% { transform: translateX(6px) translateY(2px); }
-            70% { transform: translateX(-4px) translateY(-1px); }
-            80% { transform: translateX(4px) translateY(1px); }
-            90% { transform: translateX(-2px); }
-        }
-
-        .stars-celebration {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2500;
-        }
-
-        .dancing-star {
-            position: absolute;
-            font-size: 2.5rem;
-            animation: star-dance 2.5s ease-in-out forwards;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
-        }
-
-        @keyframes star-dance {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            15% {
-                transform: scale(1.3) rotate(72deg);
-                opacity: 1;
-            }
-            30% {
-                transform: scale(0.7) rotate(144deg);
-                opacity: 1;
-            }
-            45% {
-                transform: scale(1.1) rotate(216deg);
-                opacity: 1;
-            }
-            60% {
-                transform: scale(0.9) rotate(288deg);
-                opacity: 1;
-            }
-            75% {
-                transform: scale(1.2) rotate(360deg);
-                opacity: 1;
-            }
-            90% {
-                transform: scale(0.8) rotate(432deg);
-                opacity: 0.7;
-            }
-            100% {
-                transform: scale(0) rotate(504deg);
-                opacity: 0;
-            }
-        }
-
-        .star-trail {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle, #ffd700, #ffed4e, transparent);
-            border-radius: 50%;
-            animation: trail-sparkle 2s ease-out forwards;
-        }
-
-        @keyframes trail-sparkle {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-                box-shadow: 0 0 10px #ffd700;
-            }
-            50% {
-                transform: scale(1.5);
-                opacity: 0.8;
-                box-shadow: 0 0 20px #ffd700;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-                box-shadow: 0 0 5px #ffd700;
-            }
-        }
-
-        .flying-comet {
-            position: absolute;
-            font-size: 2rem;
-            animation: comet-flight 3s ease-in-out forwards;
-            text-shadow: 0 0 20px rgba(255, 140, 0, 0.9);
-            filter: drop-shadow(0 0 10px rgba(255, 69, 0, 0.8));
-            z-index: 2600;
-        }
-
-        @keyframes comet-flight {
-            0% {
-                transform: scale(0.5) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                transform: scale(1) rotate(45deg);
-                opacity: 1;
-            }
-            90% {
-                transform: scale(1.2) rotate(405deg);
-                opacity: 1;
-                left: var(--end-x);
-                top: var(--end-y);
-            }
-            100% {
-                transform: scale(0) rotate(450deg);
-                opacity: 0;
-                left: var(--end-x);
-                top: var(--end-y);
-            }
-        }
-
-        .comet-trail {
-            position: absolute;
-            width: 3px;
-            height: 60px;
-            background: linear-gradient(to bottom,
-                rgba(255, 140, 0, 0.9) 0%,
-                rgba(255, 69, 0, 0.7) 30%,
-                rgba(255, 215, 0, 0.5) 60%,
-                transparent 100%);
-            border-radius: 50px;
-            animation: comet-trail-flight 3s ease-in-out forwards;
-            transform-origin: center top;
-            z-index: 2550;
-        }
-
-        @keyframes comet-trail-flight {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                transform: scale(1) rotate(45deg);
-                opacity: 0.8;
-            }
-            90% {
-                transform: scale(1.5) rotate(405deg);
-                opacity: 0.6;
-                left: var(--trail-end-x);
-                top: var(--trail-end-y);
-            }
-            100% {
-                transform: scale(0) rotate(450deg);
-                opacity: 0;
-                left: var(--trail-end-x);
-                top: var(--trail-end-y);
-            }
-        }
-
-        .character-message {
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-align: center;
-            color: #4a5568;
-            margin-top: 5px;
-        }
-
-        .character-message.happy {
-            color: #2f855a;
-        }
-
-        .character-message.sad {
-            color: #c53030;
-        }
-
-        .square:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border-color: rgba(255, 215, 0, 0.8);
-        }
-
-        .square-character {
-            /* Tamanho ajustado para o ícone/imagem */
-            width: 60px; 
-            height: 60px;
-            border-radius: 50%;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem; /* Para emojis Início/Fim */
-            background-size: cover; /* Para as imagens de personagem */
-            background-position: center;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
-        }
-
-        .square-number {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #4a5568;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2px 6px;
-            border-radius: 8px;
-            margin-top: 2px;
-        }
-
-        @keyframes float-gentle {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        .square.normal {
-            background: linear-gradient(135deg, #e8f5e8, #c6f6d5);
-            border-color: rgba(72, 187, 120, 0.8);
-        }
-
-        .square.vf {
-            background: linear-gradient(135deg, #fff5e6, #fed7aa);
-            border-color: rgba(237, 137, 54, 0.8);
-        }
-
-        .square.start {
-            background: linear-gradient(135deg, #e6f3ff, #bee3f8);
-            border-color: rgba(66, 153, 225, 0.8);
-            width: 90px;
-            height: 110px;
-        }
-
-        .square.finish {
-            background: linear-gradient(135deg, #f0e6ff, #e9d8fd);
-            border-color: rgba(159, 122, 234, 0.8);
-            width: 90px;
-            height: 110px;
-            animation: pulse-float 2s infinite, float-gentle 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse-float {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(159, 122, 234, 0.7);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 0 15px rgba(159, 122, 234, 0);
-                transform: scale(1.1);
-            }
-        }
-
-        .player {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid white;
-            top: -10px;
-            z-index: 10;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .player.player1 {
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-            right: -10px;
-        }
-
-        .player.player2 {
-            background: linear-gradient(135deg, #e53e3e, #c53030);
-            right: -30px;
-        }
-
-        .roulette-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            z-index: 10;
-        }
-
-        .roulette {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: conic-gradient(
-                #ff6b6b 0deg 60deg,
-                #4ecdc4 60deg 120deg,
-                #45b7d1 120deg 180deg,
-                #96ceb4 180deg 240deg,
-                #feca57 240deg 300deg,
-                #ff9ff3 300deg 360deg
-            );
-            border: 8px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .roulette:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
-        }
-
-        .roulette.spinning {
-            animation: spin 2s ease-out;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(1800deg); }
-        }
-
-        .roulette-center {
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4a5568;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .roulette-pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #ffd700;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .turn-indicator {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            text-align: center;
-            min-width: 200px;
-        }
-
-        .game-info {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #edf2f7, #e2e8f0);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .winner-announcement {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #2d3748;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 20px 0;
-            box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
-            animation: celebration 1s ease-in-out;
-        }
-
-        @keyframes celebration {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .modal h3 {
-            color: #4a5568;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .modal p {
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #718096;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: #4299e1;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #3182ce;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .btn-secondary:hover {
-            background: #cbd5e0;
-            transform: translateY(-2px);
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 1px solid #cbd5e0;
-        }
-
-        .vf-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .btn-true {
-            background: #48bb78;
-            color: white;
-        }
-
-        .btn-true:hover {
-            background: #38a169;
-        }
-
-        .btn-false {
-            background: #e53e3e;
-            color: white;
-        }
-
-        .btn-false:hover {
-            background: #c53030;
-        }
-
-        @media (max-width: 768px) {
-            .game-container {
-                padding: 20px;
-            }
-
-            .game-title {
-                font-size: 2rem;
-            }
-
-            .board {
-                grid-template-columns: repeat(6, 1fr);
-                gap: 6px;
-                padding: 15px;
-            }
-
-            .square {
-                font-size: 0.8rem;
-                padding: 3px;
-            }
-
-            .dice {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10% { transform: translateX(-5px); } 20% { transform: translateX(5px); } 30% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 50% { transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse { animation: pulse 2s infinite; }
+        .shake { animation: shake 0.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s ease; }
+        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 30px rgba(255, 107, 107, 0.3); }
+        .locked { filter: grayscale(80%) brightness(0.5); pointer-events: none; cursor: not-allowed; }
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
+        #video-container video { width: 100%; height: 100%; object-fit: cover; }
+        #play-video { position: absolute; z-index: 10001; font-size: 80px; color: white; background: rgba(0, 0, 0, 0.4); border: 3px solid white; border-radius: 50%; width: 120px; height: 120px; line-height: 120px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        #play-video:hover { background: rgba(255, 107, 107, 0.5); transform: scale(1.1); }
+        #skip-video { position: absolute; bottom: 30px; right: 30px; padding: 12px 25px; font-size: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 10px; cursor: pointer; z-index: 10000; transition: all 0.3s; }
+        #skip-video:hover { background: rgba(255, 255, 255, 0.4); border-color: white; }
+        #video-container.hidden { opacity: 0; pointer-events: none; }
+        .answer-btn { white-space: normal; text-align: left; line-height: 1.4; padding-top: 0.75rem; padding-bottom: 0.75rem; }
     </style>
-    <style>
-        /* Estilos específicos do Modal de Vídeo */
-        #videoModal .modal-content {
-            max-width: 800px;
-            width: 90%;
-            padding: 0;
-            overflow: hidden;
-        }
-        #videoModal iframe, #videoModal video {
-            display: block;
-            width: 100%;
-            height: 450px;
-            background: #000;
-        }
-        #videoModal .modal-buttons {
-            padding: 20px;
-        }
-        @media (max-width: 768px) {
-            #videoModal iframe, #videoModal video {
-                height: 300px;
-            }
-        }
-    </style>
-    <style>@view-transition { navigation: auto; }</style>
-    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
 </head>
-<body>
-    <audio id="bgm" src="/assets/bgm.mp3" loop></audio>
-    <audio id="audioDice" src="/assets/dice_roll.ogg"></audio>
-    <audio id="audioCoin" src="/assets/coin.wav"></audio>
-    <audio id="audioError" src="/assets/error.mp3"></audio>
-    <audio id="audioWin" src="/assets/win.wav"></audio>
+<body class="gradient-bg min-h-screen text-white">
 
-    <div class="bubbles">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-    </div><div class="explosion-overlay" id="explosionOverlay"></div>
-    <div class="explosion-particles" id="explosionParticles"></div><div class="stars-celebration" id="starsCelebration"></div><div class="sound-waves" id="soundWaves"></div><button class="music-button" id="musicButton" onclick="toggleMusic()">🎶 Ligar Música</button>
+    <div id="video-container">
+        <video id="intro-video" playsinline>
+            <source src="video/1000007047.mp4" type="video/mp4"> Seu navegador não suporta o vídeo.
+        </video>
+        <button id="play-video">▶</button>
+        <button id="skip-video" style="display: none;">Pular Vídeo ⏩</button>
+    </div>
 
-    <div class="modal" id="videoModal" style="display: flex;">
-        <div class="modal-content">
-            <h3 id="videoModalTitle" style="padding: 20px 20px 0;">Bem-vindo(a) ao Jogo da Saúde Sexual!</h3>
-            <video id="introVideo" width="100%" height="450" controls autoplay>
-                <source src="/assets/video/1000007047.mp4" type="video/mp4">
-                Seu navegador não suporta a tag de vídeo.
-            </video>
-            <div class="modal-buttons" style="padding: 20px;">
-                <button class="btn btn-primary" onclick="closeVideoModal()">Começar o Jogo</button>
+    <div class="bg-black bg-opacity-50 p-4 border-b border-pink-500">
+         <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-y-2">
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-pink-400">💖 Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</h1>
+                <p class="text-xs md:text-sm text-gray-300">Resolva os desafios para entender seu corpo!</p>
+            </div>
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <div class="text-center"><div class="text-yellow-400 font-bold text-lg md:text-xl" id="timer">10:00</div><div class="text-xs text-gray-400">TEMPO</div></div>
+                <div class="text-center"><div class="text-green-400 font-bold text-lg md:text-xl" id="score">0</div><div class="text-xs text-gray-400">PONTOS</div></div>
+                <div class="text-center"><div class="text-blue-400 font-bold text-lg md:text-xl" id="progress">0/5</div><div class="text-xs text-gray-400">SALAS</div></div>
             </div>
         </div>
     </div>
 
-    <div class="game-container">
-        <div class="game-header">
-            <h1 class="game-title" id="gameTitle">Tabuleiro Imersivo - Educação Sexual</h1>
-            <p class="instructions" id="instructionsText">Clique na roleta para jogar! Respostas certas ganham moedas, erradas ganham bombas!</p>
-        </div>
-        <div class="players-info">
-            <div class="player-card player1 active" id="player1Card">
-                <div class="player-name" id="player1Name">
-                    Jogador 1
-                </div>
-                <div>
-                    Posição: <span id="player1Position">1</span>/40
-                </div>
-                <div class="player-stats">
-                    <div class="stat coins">
-                        🪙 <span id="player1Coins">0</span>
-                    </div>
-                    <div class="stat bombs">
-                        💣 <span id="player1Bombs">0</span>
-                    </div>
-                </div>
-            </div>
-            <div class="player-card player2" id="player2Card">
-                <div class="player-name" id="player2Name">
-                    Jogador 2
-                </div>
-                <div>
-                    Posição: <span id="player2Position">1</span>/40
-                </div>
-                <div class="player-stats">
-                    <div class="stat coins">
-                        🪙 <span id="player2Coins">0</span>
-                    </div>
-                    <div class="stat bombs">
-                        💣 <span id="player2Bombs">0</span>
-                    </div>
-                </div>
+    <div class="max-w-6xl mx-auto p-4 md:p-6">
+        <div id="intro-screen" class="text-center py-8 md:py-12 hidden">
+            <div class="bg-black bg-opacity-70 rounded-3xl p-6 md:p-8 border border-pink-500 neon-glow">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-400">🌸 JORNADA DO AUTOCONHECIMENTO</h2>
+                <p class="text-lg md:text-xl mb-6 text-gray-300">Seu corpo tem segredos! Para desvendá-los, você precisa resolver 5 desafios sobre saúde íntima e sexualidade.</p>
+                <p class="text-md md:text-lg mb-8 text-yellow-400">⏰ Você tem 10 minutos para completar a jornada!</p>
+                <button onclick="startGame()" class="bg-pink-600 hover:bg-pink-700 px-6 py-3 md:px-8 md:py-4 rounded-xl text-lg md:text-xl font-bold transition-all transform hover:scale-105 neon-glow">
+                    🔓 COMEÇAR JORNADA
+                </button>
             </div>
         </div>
-        <div class="game-info">
-            <div class="turn-indicator" id="turnIndicator">
-                Vez do Jogador 1
+
+        <div id="game-board" class="hidden">
+             <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <div id="room-1" class="room-card bg-gradient-to-br from-blue-900 to-blue-700 border-2 border-blue-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(1)"> <div class="text-center"><div class="text-3xl mb-2">💧🩸</div><h3 class="text-lg font-bold mb-1">Fluidos e Ciclos</h3><p class="text-xs text-blue-200">Lubrificantes e Menstruação</p><div class="mt-3 flex justify-center"><span id="status-1" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
+                <div id="room-2" class="room-card locked bg-gradient-to-br from-red-900 to-red-700 border-2 border-red-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(2)"> <div class="text-center"><div class="text-3xl mb-2">🦠⚠️</div><h3 class="text-lg font-bold mb-1">Proteção Essencial</h3><p class="text-xs text-red-200">Riscos e Mitos sobre ISTs</p><div class="mt-3 flex justify-center"><span id="status-2" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
+                <div id="room-3" class="room-card locked bg-gradient-to-br from-purple-900 to-purple-700 border-2 border-purple-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(3)"> <div class="text-center"><div class="text-3xl mb-2">🧼✨</div><h3 class="text-lg font-bold mb-1">Cuidados Diários</h3><p class="text-xs text-purple-200">Higiene e Descarte</p><div class="mt-3 flex justify-center"><span id="status-3" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
+                <div id="room-4" class="room-card locked bg-gradient-to-br from-teal-900 to-teal-700 border-2 border-teal-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(4)"> <div class="text-center"><div class="text-3xl mb-2">🤝💬</div><h3 class="text-lg font-bold mb-1">Relações e Respeito</h3><p class="text-xs text-teal-200">Comunicação e Consentimento</p><div class="mt-3 flex justify-center"><span id="status-4" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
+                <div id="room-5" class="room-card locked bg-gradient-to-br from-yellow-900 to-yellow-700 border-2 border-yellow-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(5)"> <div class="text-center"><div class="text-3xl mb-2">🛡️❗</div><h3 class="text-lg font-bold mb-1">Prevenção e Ação</h3><p class="text-xs text-yellow-200">Preservativos e Contracepção</p><div class="mt-3 flex justify-center"><span id="status-5" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
             </div>
-        </div>
-        <div class="board-container">
-            <div class="board" id="gameBoard"></div>
-            <div class="roulette-container">
-                <div class="roulette" id="roulette" onclick="spinRoulette()">
-                    <div class="roulette-pointer"></div>
-                    <div class="roulette-center" id="rouletteResult">
-                        🎯
-                    </div>
-                </div>
-                <div style="text-align: center; color: #4a5568; font-weight: bold;">
-                    🎲 Clique para rolar o dado!
-                </div>
-            </div>
-        </div>
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #4299e1, #3182ce);"></div><span>Início</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #48bb78, #38a169);"></div><span>Verdadeiro/Falso</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #ed8936, #dd6b20);"></div><span>Verdadeiro/Falso Especial</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: linear-gradient(135deg, #9f7aea, #805ad5);"></div><span>Fim</span>
-            </div>
-        </div>
-    </div><div class="modal" id="questionModal">
-        <div class="modal-content">
-            <h3 id="modalTitle">Pergunta</h3>
-            <p id="modalQuestion"></p>
-            <div id="modalButtons" class="modal-buttons"><button class="btn btn-primary" onclick="showAnswer()">Ver Resposta</button>
-            </div>
-        </div>
-    </div><div class="modal" id="answerModal">
-        <div class="modal-content">
-            <h3 id="answerTitle">Resposta</h3>
-            <p id="answerText"></p>
-            <div class="modal-buttons"><button class="btn btn-primary" onclick="closeModal()">Continuar</button>
-            </div>
-        </div>
+
+            <div id="case-area" class="bg-black bg-opacity-50 rounded-2xl p-6 md:p-8 border border-gray-600 min-h-[400px] flex items-center justify-center">
+                 <div id="waiting-message" class="text-center py-12"> <div class="text-6xl mb-4 pulse">🌸</div> <h3 class="text-2xl font-bold text-gray-400 mb-2">Escolha uma sala desbloqueada</h3> <p class="text-gray-500">Clique para iniciar o desafio!</p> </div>
+                <div id="case-1" class="case-content hidden w-full"> <div class="bg-blue-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-blue-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-blue-400 mb-4">💧🩸 SALA 1: Fluidos e Ciclos</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-blue-300 mb-3">🧩 PUZZLE 1/3: Lubrificantes à base de óleo são seguros para usar com preservativos de látex?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-1" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-blue-300 mb-3">🧩 PUZZLE 2/3: É possível engravidar tendo relação sexual durante a menstruação?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'b', this)">Falso</button></div></div> <div id="puzzle-3-case-1" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-blue-300 mb-3">🧩 PUZZLE 3/3: Qual a diferença entre libido e desejo sexual?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'a', this)">Libido é a vontade específica, desejo é o impulso geral.</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'b', this)">Libido é o impulso/energia sexual geral, desejo é a vontade específica de ter atividade.</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'c', this)">Não há diferença, são sinônimos.</button></div></div> <div id="success-1" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 1 CONCLUÍDA!</h3><button onclick="completeCase(1)" class="next-button">🔓 Próxima Sala</button></div> </div> </div>
+                 <div id="case-2" class="case-content hidden w-full"> <div class="bg-red-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-red-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-red-400 mb-4">🦠⚠️ SALA 2: Proteção Essencial</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-red-300 mb-3">🧩 PUZZLE 1/3: IST é um problema apenas para pessoas com múltiplos parceiros?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-2" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-red-300 mb-3">🧩 PUZZLE 2/3: O sexo anal é uma prática de baixo risco para a transmissão de IST?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'b', this)">Falso</button></div></div> <div id="puzzle-3-case-2" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-red-300 mb-3">🧩 PUZZLE 3/3: O que é 'sexting' e qual o principal risco se feito sem consentimento/segurança?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'a', this)">É enviar mensagens de texto normais; o risco é gastar muito crédito.</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'b', this)">É enviar conteúdo sexual explícito; o risco é a distribuição não consensual (ilegal).</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'c', this)">É marcar encontros online; o risco é conhecer pessoas perigosas.</button></div></div> <div id="success-2" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 2 CONCLUÍDA!</h3><button onclick="completeCase(2)" class="next-button">🔓 Próxima Sala</button></div> </div> </div>
+                 <div id="case-3" class="case-content hidden w-full"> <div class="bg-purple-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-purple-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-purple-400 mb-4">🧼✨ SALA 3: Cuidados Diários</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-purple-300 mb-3">🧩 PUZZLE 1/3: Qual a ação correta para higiene íntima da Cris?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'a', this)">Usar sabonete perfumado na vulva e fazer ducha vaginal.</button><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'b', this)">Lavar apenas a vulva (externa) com água/sabonete e evitar ducha.</button></div></div> <div id="puzzle-2-case-3" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-purple-300 mb-3">🧩 PUZZLE 2/3: Como a Cris deve descartar o absorvente usado?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'a', this)">Jogar no vaso sanitário.</button><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'b', this)">Enrolar e jogar no lixo.</button></div></div> <div id="puzzle-3-case-3" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-purple-300 mb-3">🧩 PUZZLE 3/3: Qual calcinha a Cris deve escolher para passar o dia fora, pensando na saúde?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'a', this)">Sintética e apertada.</button><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'b', this)">Algodão e confortável.</button></div></div> <div id="success-3" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 3 CONCLUÍDA!</h3><button onclick="completeCase(3)" class="next-button">🔓 Próxima Sala</button></div> </div> </div>
+                 <div id="case-4" class="case-content hidden w-full"> <div class="bg-teal-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-teal-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-teal-400 mb-4">🤝💬 SALA 4: Relações e Respeito</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-teal-300 mb-3">🧩 PUZZLE 1/3: Toda IST apresenta sintomas visíveis?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-4" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-teal-300 mb-3">🧩 PUZZLE 2/3: Qual a importância da comunicação e consentimento nas relações sexuais?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'a', this)">São opcionais se o casal se conhece bem.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'b', this)">São a base para garantir segurança, respeito e prazer mútuo.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'c', this)">Apenas o consentimento inicial é necessário.</button></div></div> <div id="puzzle-3-case-4" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-teal-300 mb-3">🧩 PUZZLE 3/3: O que significa 'Zona de Conforto' na sexualidade?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'a', this)">Evitar qualquer tipo de atividade sexual.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'b', this)">As práticas e intimidades com as quais a pessoa se sente segura e à vontade.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'c', this)">Fazer apenas o que o parceiro gosta.</button></div></div> <div id="success-4" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 4 CONCLUÍDA!</h3><button onclick="completeCase(4)" class="next-button">🔓 Última Sala</button></div> </div> </div>
+                 <div id="case-5" class="case-content hidden w-full"> <div class="bg-yellow-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-yellow-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-yellow-400 mb-4">🛡️❗ SALA 5: Prevenção e Ação</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-yellow-300 mb-3">🧩 PUZZLE 1/2: É seguro usar dois preservativos ao mesmo tempo?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-5" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-yellow-300 mb-3">🧩 PUZZLE 2/2: A pílula do dia seguinte pode ser usada como método contraceptivo regular?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'b', this)">Falso</button></div></div> <div id="success-5" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 5 CONCLUÍDA!</h3><button onclick="completeCase(5)" class="finish-button">🏆 FINALIZAR JORNADA</button></div> </div> </div>
+            </div> </div> <div id="victory-screen" class="hidden text-center py-12"> <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-3xl p-8 border border-green-500 neon-glow"> <div class="text-6xl mb-4">🏆</div> <h2 class="text-4xl font-bold mb-4 text-green-400">JORNADA CONCLUÍDA!</h2> <p class="text-xl mb-6 text-green-300">Parabéns! Você desvendou os desafios e aprendeu mais sobre seu corpo!</p> <div class="bg-black bg-opacity-50 rounded-xl p-6 mb-6"> <div class="grid grid-cols-3 gap-6 text-center"> <div><div class="text-2xl font-bold text-yellow-400" id="final-time">--:--</div><div class="text-sm text-gray-400">Tempo Final</div></div> <div><div class="text-2xl font-bold text-green-400" id="final-score">0</div><div class="text-sm text-gray-400">Pontuação</div></div> <div><div class="text-2xl font-bold text-blue-400">5/5</div><div class="text-sm text-gray-400">Salas Concluídas</div></div> </div> </div> <button onclick="restartGame()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl text-xl font-bold transition-all transform hover:scale-105">🔄 JOGAR NOVAMENTE</button> </div> </div>
     </div>
-    
-    <script src="src/js/dadosDoJogo.js"></script> 
-    
+
+    <audio id="som-fundo" src="audio/bgm.mp3" loop></audio>
+    <audio id="som-click" src="audio/coin.wav"></audio>
+    <audio id="som-correto" src="audio/win.wav"></audio>
+    <audio id="som-incorreto" src="audio/error.mp3"></audio>
+    <audio id="som-vitoria" src="audio/win.wav"></audio>
+    <audio id="som-gameover" src="audio/error.mp3"></audio>
+
     <script>
-        // Elementos de áudio e vídeo
-        const bgm = document.getElementById('bgm');
-        const introVideo = document.getElementById('introVideo');
-        const audioDice = document.getElementById('audioDice');
-        const audioCoin = document.getElementById('audioCoin');
-        const audioError = document.getElementById('audioError');
-        const audioWin = document.getElementById('audioWin');
+        // --- BANCO DE PERGUNTAS (14 perguntas) ---
+        const gameQuestions = [
+            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Lubrificantes à base de óleo (como vaselina) podem danificar o látex. Use sempre base água ou silicone." }, { options: {a: "Verdadeiro", b: "Falso"}, answer: 'a', feedback: "Sim, é possível embora menos provável. Espermatozoides sobrevivem dias." }, { options: {a: "Libido é a vontade específica, desejo é o impulso geral.", b: "Libido é o impulso/energia sexual geral, desejo é a vontade específica de ter atividade.", c: "Não há diferença, são sinônimos."}, answer: 'b', feedback: "Libido é o 'motor', desejo é a 'vontade de dirigir'." },
+            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não. Qualquer pessoa sexualmente ativa pode contrair IST sem proteção." }, { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não, é de alto risco devido à fragilidade do tecido anal." }, { options: {a: "É enviar mensagens de texto normais; o risco é gastar muito crédito.", b: "É enviar conteúdo sexual explícito; o risco é a distribuição não consensual (ilegal).", c: "É marcar encontros online; o risco é conhecer pessoas perigosas."}, answer: 'b', feedback: "Sexting envolve conteúdo explícito. A distribuição sem consentimento é crime." },
+            { options: {a: "Usar sabonete perfumado na vulva e fazer ducha vaginal.", b: "Lavar apenas a vulva (externa) com água/sabonete e evitar ducha."}, answer: 'b', feedback: "A vagina é autolimpante. Duchas desequilibram o pH. Lave só externamente." }, { options: {a: "Jogar no vaso sanitário.", b: "Enrolar e jogar no lixo."}, answer: 'b', feedback: "Sempre no lixo para evitar entupimentos e poluição." }, { options: {a: "Sintética e apertada.", b: "Algodão e confortável."}, answer: 'b', feedback: "Algodão permite a respiração da pele, prevenindo infecções." },
+            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não, muitas ISTs podem ser assintomáticas. Teste-se regularmente." }, { options: {a: "São opcionais se o casal se conhece bem.", b: "São a base para garantir segurança, respeito e prazer mútuo.", c: "Apenas o consentimento inicial é necessário."}, answer: 'b', feedback: "Consentimento deve ser contínuo, claro e entusiástico." }, { options: {a: "Evitar qualquer tipo de atividade sexual.", b: "As práticas e intimidades com as quais a pessoa se sente segura e à vontade.", c: "Fazer apenas o que o parceiro gosta."}, answer: 'b', feedback: "Explorar fora da zona de conforto exige confiança e consentimento mútuo." },
+            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não! O atrito aumenta o risco de rasgarem. Use apenas um." }, { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não, é apenas para emergências. É menos eficaz e pode desregular hormônios." }
+        ];
 
-        // Mapeamento das imagens de personagem (CORRIGIDO com caminhos absolutos)
-        const characterImages = {
-            // Caminhos ajustados para refletir a pasta 'assets' na raiz
-            'boy_q': '/assets/img/20251020_222253_0000.png.jpg', 
-            'boy_a': '/assets/img/20251020_222254_0003.png.jpg', 
-            'boy_e': '/assets/img/20251020_222253_0000.png.jpg',
+        // --- Variáveis Globais ---
+        const TOTAL_CASES = 5;
+        const PUZZLES_PER_CASE = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 2 };
+        const INITIAL_TIME = 600;
+        let gameState = {};
+        let currentPuzzle = {};
+        // *** VARIÁVEL GLOBAL DEFINIDA CORRETAMENTE AQUI ***
+        let jogoIniciado = false;
 
-            'girl_q': '/assets/img/20251020_222254_0002.png.jpg', 
-            'girl_a': '/assets/img/20251020_222254_0003.png.jpg', 
-            'girl_e': '/assets/img/20251020_222253_0000.png.jpg',
-            'girl_d': '/assets/img/20251020_222254_0002.png.jpg'
-        };
-        
-        // Novo mapeamento simplificado para a casa (usa as imagens que você forneceu):
-        const imagePergunta = characterImages.girl_q;
-        const imageAcerto = characterImages.girl_a;
-        const imageErro = characterImages.boy_q;
+        // --- Elementos DOM ---
+        const videoContainer = document.getElementById('video-container');
+        const introVideo = document.getElementById('intro-video');
+        const skipButton = document.getElementById('skip-video');
+        const playButton = document.getElementById('play-video');
+        const introScreen = document.getElementById('intro-screen');
+        const gameBoard = document.getElementById('game-board');
+        const victoryScreen = document.getElementById('victory-screen');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const progressDisplay = document.getElementById('progress');
+        const caseArea = document.getElementById('case-area');
+        const waitingMessage = document.getElementById('waiting-message');
 
+        // --- Funções de Áudio ---
+        function tocarSom(id) {
+            try {
+                const audio = document.getElementById(id);
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play().catch(e => console.warn(`Som ${id} bloqueado:`, e.message));
+                } else { console.error(`Áudio #${id} não encontrado!`); }
+            } catch (error) { console.error(`Erro ao tocar som #${id}:`, error); }
+        }
 
-        // Estado do jogo
-        let gameState = {
-            currentPlayer: 1,
-            players: {
-                1: { position: 1, coins: 0, bombs: 0 },
-                2: { position: 1, coins: 0, bombs: 0 }
-            },
-            gameEnded: false,
-            musicPlaying: false
-        };
-        let currentQuestion = null;
-        let currentQuestionType = null;
+        // --- Funções de Controle do Vídeo ---
+        function handleVideoEnd() {
+            console.log("handleVideoEnd chamada.");
+            if (typeof jogoIniciado === 'undefined') { console.error("ERRO GRAVE: jogoIniciado não está definido!"); jogoIniciado = false; }
+            if (jogoIniciado) { console.log("Jogo já iniciado, ignorando handleVideoEnd."); return; }
+            videoContainer.classList.add('hidden');
+            introScreen.classList.remove('hidden');
+            introScreen.classList.add('fade-in');
+            document.body.style.overflow = 'auto';
+            console.log("Vídeo terminado/pulado, mostrando intro do jogo.");
+        }
 
-        // Configuração padrão
-        const defaultConfig = {
-            game_title: "Tabuleiro Imersivo - Educação Sexual",
-            player1_name: "Jogador 1",
-            player2_name: "Jogador 2",
-            instructions_text: "Clique na roleta para jogar! Respostas certas ganham moedas, erradas ganham bombas!"
-        };
+        function tocarVideoIntro() {
+            console.log("tocarVideoIntro chamada.");
+            introVideo.play().then(() => {
+                playButton.style.display = 'none';
+                skipButton.style.display = 'block';
+                tocarSom('som-click');
+            }).catch(error => {
+                console.error("Erro ao tocar vídeo:", error);
+                handleVideoEnd();
+            });
+        }
 
-        // Funções de Áudio
-        function playSound(audioElement) {
-            if (audioElement) {
-                audioElement.currentTime = 0; // Reinicia o áudio
-                audioElement.play().catch(e => console.error("Erro ao tentar tocar áudio:", e));
+        // --- Funções de Controle do Jogo ---
+        function initializeGameState() {
+            gameState = { currentCase: 0, completedCases: 0, score: 0, timeLeft: INITIAL_TIME, gameStarted: false, timer: null };
+            currentPuzzle = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 };
+            jogoIniciado = false; // Garante reset
+            console.log("Estado do jogo inicializado/resetado.");
+        }
+
+        function startGame() {
+            console.log("startGame chamada.");
+            if (jogoIniciado) { console.warn("Tentativa de iniciar jogo já iniciado."); return; }
+            jogoIniciado = true; // Marca como iniciado
+
+            tocarSom('som-click');
+            introScreen.classList.add('hidden');
+            gameBoard.classList.remove('hidden');
+            gameBoard.classList.add('fade-in');
+
+            // gameState já foi inicializado no load/restart
+            gameState.gameStarted = true;
+
+            updateUI();
+            startTimer();
+            unlockRoom(1);
+            showWaitingMessage();
+            console.log("Jogo iniciado!");
+
+            const musicaFundo = document.getElementById('som-fundo');
+            if (musicaFundo) {
+                musicaFundo.volume = 0.3;
+                musicaFundo.play().catch(error => { console.warn("Música de fundo bloqueada.", error); document.body.addEventListener('click', () => musicaFundo.play(), { once: true }); });
             }
         }
 
-        function toggleMusic() {
-            const button = document.getElementById('musicButton');
-            gameState.musicPlaying = !gameState.musicPlaying;
-
-            if (gameState.musicPlaying) {
-                button.textContent = '🎵 Música Ligada';
-                button.classList.add('playing');
-                bgm.play().catch(e => console.error("Erro ao tocar BGM:", e));
-                createSoundWaves(button, '#667eea', 3);
-            } else {
-                button.textContent = '🎶 Ligar Música';
-                button.classList.remove('playing');
-                bgm.pause();
-            }
-        }
-
-        // Fechar o modal de vídeo (inicia o jogo)
-        function closeVideoModal() {
-            document.getElementById('videoModal').style.display = 'none';
-            introVideo.pause();
-            introVideo.currentTime = 0; // Reinicia o vídeo
-
-            // Inicia a música de fundo automaticamente, se não estiver tocando
-            if (!gameState.musicPlaying) {
-                 toggleMusic();
-            }
-        }
-
-        function createSoundWaves(element, color, count = 1) {
-             const container = document.getElementById('soundWaves');
-             const rect = element.getBoundingClientRect();
-             const centerX = rect.left + rect.width / 2;
-             const centerY = rect.top + rect.height / 2;
-
-             for (let i = 0; i < count; i++) {
-                 const wave = document.createElement('div');
-                 wave.className = 'sound-wave';
-                 wave.style.borderColor = color;
-                 wave.style.left = (centerX - 10) + 'px';
-                 wave.style.top = (centerY - 10) + 'px';
-                 wave.style.animationDelay = (i * 0.3) + 's';
-
-                 container.appendChild(wave);
-
-                 setTimeout(() => {
-                     if (container.contains(wave)) {
-                         container.removeChild(wave);
-                     }
-                 }, 1500 + (i * 300));
-             }
-        }
-
-        function createDiceVisualEffect() {
-            // Efeito de som do dado
-            playSound(audioDice);
-            const effect = document.createElement('div');
-            effect.className = 'dice-visual-effect';
-            effect.textContent = '🎲';
-            document.body.appendChild(effect);
-
-            setTimeout(() => {
-                if (document.body.contains(effect)) {
-                    document.body.removeChild(effect);
-                }
+        function startTimer() {
+            clearInterval(gameState.timer);
+            console.log("Timer iniciado.");
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimerDisplay();
+                if (gameState.timeLeft <= 0) { gameOver(false); }
             }, 1000);
         }
 
-        function createMoveTrail(fromElement, toElement) {
-             const fromRect = fromElement.getBoundingClientRect();
-             const toRect = toElement.getBoundingClientRect();
+        function updateUI() { updateTimerDisplay(); updateScoreDisplay(); updateProgressDisplay(); }
+        function updateTimerDisplay() {
+             const minutes = Math.floor(gameState.timeLeft / 60); const seconds = gameState.timeLeft % 60;
+             timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+             if (gameState.timeLeft <= 60 && !timerDisplay.classList.contains('text-red-500')) { timerDisplay.classList.remove('text-yellow-400'); timerDisplay.classList.add('text-red-500', 'pulse'); }
+             else if (gameState.timeLeft > 60 && timerDisplay.classList.contains('text-red-500')) { timerDisplay.classList.remove('text-red-500', 'pulse'); timerDisplay.classList.add('text-yellow-400'); }
+        }
+        function updateScoreDisplay() { scoreDisplay.textContent = gameState.score; }
+        function updateProgressDisplay() { progressDisplay.textContent = `${gameState.completedCases}/${TOTAL_CASES}`; }
 
-             const steps = 8;
-             for (let i = 0; i < steps; i++) {
-                 setTimeout(() => {
-                     const trail = document.createElement('div');
-                     trail.className = 'move-trail';
-
-                     const progress = i / (steps - 1);
-                     const x = fromRect.left + (toRect.left - fromRect.left) * progress;
-                     const y = fromRect.top + (toRect.top - fromRect.top) * progress;
-
-                     trail.style.left = x + 'px';
-                     trail.style.top = y + 'px';
-
-                     document.body.appendChild(trail);
-
-                     setTimeout(() => {
-                         if (document.body.contains(trail)) {
-                             document.body.removeChild(trail);
-                         }
-                     }, 1000);
-                 }, i * 100);
-             }
+        function unlockRoom(roomNumber) {
+             if (roomNumber > TOTAL_CASES) return;
+            const room = document.getElementById(`room-${roomNumber}`); const status = document.getElementById(`status-${roomNumber}`);
+            if (room && status) { room.classList.remove('locked'); status.textContent = '🔓'; status.classList.remove('bg-gray-600'); status.classList.add('bg-green-600'); console.log(`Sala ${roomNumber} desbloqueada.`); }
         }
 
-        function createCoinVisualEffect() {
-            // Efeito de som de moeda
-            playSound(audioCoin);
-            const effect = document.createElement('div');
-            effect.className = 'coin-visual-effect';
-            effect.textContent = '🪙';
-            document.body.appendChild(effect);
+        function enterRoom(roomNumber) {
+            const room = document.getElementById(`room-${roomNumber}`);
+            if (!room || room.classList.contains('locked')) return;
+            // Verifica se jogoIniciado é true
+            if (!jogoIniciado) { console.warn("Jogo não iniciado."); return; }
 
-            setTimeout(() => {
-                if (document.body.contains(effect)) {
-                    document.body.removeChild(effect);
-                }
-            }, 2000);
+            console.log(`Entrando na sala ${roomNumber}`);
+            tocarSom('som-click');
+            gameState.currentCase = roomNumber;
+
+            document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
+            waitingMessage.classList.add('hidden');
+
+            const currentCaseElement = document.getElementById(`case-${roomNumber}`);
+            if (currentCaseElement) { currentCaseElement.classList.remove('hidden'); currentCaseElement.classList.add('fade-in'); showCurrentPuzzle(roomNumber); }
+            else { console.error(`Elemento do caso ${roomNumber} não encontrado!`); showWaitingMessage(); }
         }
 
-        function createErrorVisualEffect() {
-            // Efeito de som de erro/bomba
-            playSound(audioError);
-            const effect = document.createElement('div');
-            effect.className = 'error-visual-effect';
-            effect.textContent = '💥';
-            document.body.appendChild(effect);
-
-            setTimeout(() => {
-                if (document.body.contains(effect)) {
-                    document.body.removeChild(effect);
-                }
-            }, 1500);
-        }
-
-        function createVictoryVisualEffect() {
-            // Efeito de som de vitória
-            playSound(audioWin);
-            const effect = document.createElement('div');
-            effect.className = 'victory-visual-effect';
-            effect.textContent = '🏆';
-            document.body.appendChild(effect);
-
-            setTimeout(() => {
-                if (document.body.contains(effect)) {
-                    document.body.removeChild(effect);
-                }
-            }, 3000);
-        }
-
-        // Inicializar o tabuleiro
-        function initializeBoard() {
-            const board = document.getElementById('gameBoard');
-            board.innerHTML = '';
-
-            const radius = 250; // Raio do círculo
-            const centerX = 300; // Centro X do tabuleiro
-            const centerY = 300; // Centro Y do tabuleiro
-
-            for (let i = 1; i <= 40; i++) {
-                const square = document.createElement('div');
-                square.className = 'square';
-                square.id = `square-${i}`;
-
-                // Calcular posição em círculo
-                const angle = ((i - 1) / 40) * 2 * Math.PI - Math.PI / 2; // Começar no topo
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
-
-                square.style.left = `${x - 40}px`; // Ajustar para nova largura
-                square.style.top = `${y - 50}px`; // Ajustar para nova altura
-                square.style.animationDelay = `${i * 0.1}s`; // Delay escalonado para animação
-
-                // 🌟 LÓGICA DE CRIAÇÃO DO ÍCONE/IMAGEM (CORRIGIDA E SIMPLIFICADA) 🌟
-                let charImage = '';
-                let charLabel = i;
-                let charEmoji = ''; 
-                
-                if (i === 1) {
-                    square.classList.add('start');
-                    charEmoji = '🚀';
-                    charLabel = 'INÍCIO';
-                } else if (i === 40) {
-                    square.classList.add('finish');
-                    charEmoji = '🏆';
-                    charLabel = 'FIM';
-                } else if (i % 5 === 0 || i % 7 === 0) {
-                    square.classList.add('vf');
-                    // Casas de V/F usam a imagem padrão (Garota Ideia)
-                    charImage = imagePergunta;
-                    charLabel = 'V/F';
-                } else {
-                    square.classList.add('normal');
-                    // Casas normais usam a imagem padrão (Garota Ideia)
-                    charImage = imagePergunta;
-                    charLabel = i;
-                }
-                
-                const character = document.createElement('div');
-                character.className = 'square-character';
-
-                if (charImage) {
-                    // Se houver imagem (casas normais ou V/F), usa a imagem como background
-                    character.style.backgroundImage = `url(${charImage})`;
-                    character.textContent = ''; // Garante que não há emoji de fallback
-                } else {
-                    // Se não houver imagem (Início/Fim), usa o emoji
-                    character.textContent = charEmoji;
-                }
-
-                const label = document.createElement('div');
-                label.className = 'square-number';
-                label.textContent = charLabel;
-                square.appendChild(character);
-                square.appendChild(label);
-                // 🌟 FIM DA LÓGICA DE CRIAÇÃO DO ÍCONE/IMAGEM 🌟
-
-
-                // Adicionar card de reação para casas com perguntas
-                if (i !== 1 && i !== 40) {
-                    const characterCard = document.createElement('div');
-                    characterCard.className = 'character-card';
-                    characterCard.id = `character-${i}`;
-
-                    const avatar = document.createElement('div');
-                    avatar.className = 'character-avatar';
-
-                    // O avatar inicial usa a imagem padrão
-                    avatar.style.backgroundImage = `url(${imagePergunta})`;
-                    avatar.classList.add('has-image');
-                    avatar.textContent = '';
-
-                    const message = document.createElement('div');
-                    message.className = 'character-message';
-                    message.textContent = 'Boa sorte!';
-
-                    characterCard.appendChild(avatar);
-                    characterCard.appendChild(message);
-                    square.appendChild(characterCard);
-                }
-
-                // Adicionar jogadores nas posições iniciais
-                if (i === 1) {
-                    const player1 = document.createElement('div');
-                    player1.className = 'player player1';
-                    player1.textContent = '1';
-                    square.appendChild(player1);
-
-                    const player2 = document.createElement('div');
-                    player2.className = 'player player2';
-                    player2.textContent = '2';
-                    square.appendChild(player2);
-                }
-
-                board.appendChild(square);
-            }
-        }
-
-        function spinRoulette() {
-            if (gameState.gameEnded) return;
-
-            const roulette = document.getElementById('roulette');
-            const result = document.getElementById('rouletteResult');
-
-            // Efeito visual e sonoro de dado
-            createDiceVisualEffect();
-            createSoundWaves(roulette, '#ffd700', 2);
-
-            roulette.classList.add('spinning', 'roulette-glow');
-
-            setTimeout(() => {
-                const roll = Math.floor(Math.random() * 6) + 1;
-                result.textContent = roll;
-                roulette.classList.remove('spinning', 'roulette-glow');
-
-                movePlayer(roll);
-            }, 2000);
-        }
-
-        function movePlayer(steps) {
-            const player = gameState.players[gameState.currentPlayer];
-            const oldPosition = player.position;
-
-            // Remover jogador da posição atual
-            const currentSquare = document.getElementById(`square-${oldPosition}`);
-            const playerElement = currentSquare.querySelector(`.player.player${gameState.currentPlayer}`);
-
-            // Calcular nova posição
-            player.position = Math.min(player.position + steps, 40);
-            const newSquare = document.getElementById(`square-${player.position}`);
-
-            // Criar rastro de movimento
-            if (playerElement) {
-                createMoveTrail(currentSquare, newSquare);
-                playerElement.remove();
-            }
-
-            // Adicionar jogador na nova posição com animação suave
-            const newPlayer = document.createElement('div');
-            newPlayer.className = `player player${gameState.currentPlayer} player-move-glow`;
-            newPlayer.textContent = gameState.currentPlayer;
-            newPlayer.style.transform = 'scale(0)';
-            newSquare.appendChild(newPlayer);
-
-            // Animar entrada do jogador
-            setTimeout(() => {
-                newPlayer.style.transform = 'scale(1)';
-                newPlayer.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            }, 100);
-
-            // Atualizar informações do jogador
-            updatePlayerDisplay();
-
-            // Verificar se chegou ao fim
-            if (player.position === 40) {
-                gameState.gameEnded = true;
-                const playerName = gameState.currentPlayer === 1 ?
-                    (document.getElementById('player1Name').textContent || 'Jogador 1') :
-                    (document.getElementById('player2Name').textContent || 'Jogador 2');
-
-                setTimeout(() => {
-                    createVictoryVisualEffect();
-                    showWinner(playerName);
-                }, 500);
-                return;
-            }
-
-            // Mostrar pergunta baseada no tipo de casa
-            setTimeout(() => {
-                const square = document.getElementById(`square-${player.position}`);
-                if (square.classList.contains('vf')) {
-                    showCharacterCard(player.position);
-                    // O array perguntasRisco (casas V/F de alto risco) é usado aqui
-                    showVFQuestion(); 
-                } else if (square.classList.contains('normal')) {
-                    showCharacterCard(player.position);
-                    // O array perguntasInformativas (casas normais) é usado aqui
-                    showInformativeQuestion(); 
-                }
-            }, 500);
-        }
-
-        function updatePlayerDisplay() {
-            const player1 = gameState.players[1];
-            const player2 = gameState.players[2];
-
-            document.getElementById('player1Position').textContent = player1.position;
-            document.getElementById('player1Coins').textContent = player1.coins;
-            document.getElementById('player1Bombs').textContent = player1.bombs;
-
-            document.getElementById('player2Position').textContent = player2.position;
-            document.getElementById('player2Coins').textContent = player2.coins;
-            document.getElementById('player2Bombs').textContent = player2.bombs;
-
-            // Atualizar indicador de turno
-            const player1Card = document.getElementById('player1Card');
-            const player2Card = document.getElementById('player2Card');
-            const turnIndicator = document.getElementById('turnIndicator');
-
-            if (gameState.currentPlayer === 1) {
-                player1Card.classList.add('active');
-                player2Card.classList.remove('active');
-                turnIndicator.textContent = `Vez do ${document.getElementById('player1Name').textContent || 'Jogador 1'}`;
-            } else {
-                player1Card.classList.remove('active');
-                player2Card.classList.add('active');
-                turnIndicator.textContent = `Vez do ${document.getElementById('player2Name').textContent || 'Jogador 2'}`;
-            }
-        }
-
-        function switchPlayer() {
-            gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
-            updatePlayerDisplay();
-        }
-
-        function showWinner(playerName) {
-            const winnerDiv = document.createElement('div');
-            winnerDiv.className = 'winner-announcement';
-            winnerDiv.innerHTML = `🎉 ${playerName} VENCEU! 🎉<br>Parabéns por completar o tabuleiro de educação sexual!`;
-
-            const gameInfo = document.querySelector('.game-info');
-            gameInfo.appendChild(winnerDiv);
-
-            setTimeout(() => {
-                showCustomModal('🏆 Fim de Jogo!', `${playerName} chegou primeiro ao final! Parabéns por aprender sobre educação sexual de forma divertida!`, [
-                    {text: 'Jogar Novamente', action: () => {
-                        gameState = {
-                            currentPlayer: 1,
-                            players: {
-                                1: { position: 1, coins: 0, bombs: 0 },
-                                2: { position: 1, coins: 0, bombs: 0 }
-                            },
-                            gameEnded: false,
-                            musicPlaying: gameState.musicPlaying
-                        };
-                        initializeBoard();
-                        updatePlayerDisplay();
-                        winnerDiv.remove();
-                        closeModal();
-                    }}
-                ]);
-            }, 2000);
-        }
-
-        function showInformativeQuestion() {
-            // Acesso ao array perguntasInformativas que vem de dadosDoJogo.js
-            // Certifique-se de que o arquivo dadosDoJogo.js foi carregado com sucesso
-            if (typeof perguntasInformativas === 'undefined') {
-                 console.error("Erro: O array 'perguntasInformativas' não foi carregado.");
-                 closeModal();
-                 return;
-            }
-            
-            const randomIndex = Math.floor(Math.random() * perguntasInformativas.length);
-            currentQuestion = perguntasInformativas[randomIndex];
-            currentQuestionType = 'informative';
-
-            document.getElementById('modalTitle').textContent = 'Pergunta Informativa';
-            document.getElementById('modalQuestion').textContent = currentQuestion.pergunta;
-            document.getElementById('modalButtons').innerHTML = `
-                <div class="vf-buttons">
-                    <button class="btn btn-true" onclick="checkVFAnswer('V')">Verdadeiro</button>
-                    <button class="btn btn-false" onclick="checkVFAnswer('F')">Falso</button>
-                </div>
-            `;
-
-            document.getElementById('questionModal').style.display = 'flex';
-        }
-
-        function showVFQuestion() {
-            // Acesso ao array perguntasRisco que vem de dadosDoJogo.js
-            // Certifique-se de que o arquivo dadosDoJogo.js foi carregado com sucesso
-            if (typeof perguntasRisco === 'undefined') {
-                 console.error("Erro: O array 'perguntasRisco' não foi carregado.");
-                 closeModal();
-                 return;
-            }
-            
-            const randomIndex = Math.floor(Math.random() * perguntasRisco.length);
-            currentQuestion = perguntasRisco[randomIndex];
-            currentQuestionType = 'vf';
-
-            document.getElementById('modalTitle').textContent = 'PERGUNTA DE RISCO (V/F)';
-            document.getElementById('modalQuestion').textContent = currentQuestion.pergunta;
-            document.getElementById('modalButtons').innerHTML = `
-                <div class="vf-buttons">
-                    <button class="btn btn-true" onclick="checkVFAnswer('V')">Verdadeiro</button>
-                    <button class="btn btn-false" onclick="checkVFAnswer('F')">Falso</button>
-                </div>
-            `;
-
-            document.getElementById('questionModal').style.display = 'flex';
-        }
-
-        function showCharacterCard(position) {
-            const characterCard = document.getElementById(`character-${position}`);
-            if (characterCard) {
-                characterCard.classList.add('show');
-            }
-        }
-
-        function updateCharacterReaction(position, isCorrect) {
-            const characterCard = document.getElementById(`character-${position}`);
-            if (characterCard) {
-                const avatar = characterCard.querySelector('.character-avatar');
-                const message = characterCard.querySelector('.character-message');
-
-                // Determinar se é menino ou menina baseado na posição
-                const isGirl = position % 2 === 0;
-                let imageFile;
-
-                if (isCorrect) {
-                    // Usa a imagem de acerto (YES!)
-                    imageFile = imageAcerto; 
-                    message.textContent = 'Parabéns! 😊';
-                    message.classList.add('happy');
-                    characterCard.classList.add('happy');
-                } else {
-                    // Usa a imagem de erro/dúvida
-                    imageFile = imageErro; 
-                    message.textContent = 'Que pena! 😔';
-                    message.classList.add('sad');
-                    characterCard.classList.add('sad');
-                }
-
-                // Aplicar imagem de reação
-                avatar.style.backgroundImage = `url(${imageFile})`;
-                avatar.classList.add('has-image');
-                avatar.textContent = '';
-
-                // Mostrar reação e manter visível
-                characterCard.classList.add('show');
-
-                // Resetar para estado neutro após 5 segundos, mas manter visível
-                setTimeout(() => {
-                    characterCard.classList.remove('happy', 'sad');
-                    message.classList.remove('happy', 'sad');
-                    message.textContent = 'Boa sorte!';
-
-                    // Volta para a imagem neutra de pergunta
-                    avatar.style.backgroundImage = `url(${imagePergunta})`;
-                }, 5000);
-            }
-        }
-
-        function checkVFAnswer(answer) {
-            const isCorrect = answer === currentQuestion.resposta_correta;
-            const player = gameState.players[gameState.currentPlayer];
-
-            // Atualizar reação do personagem
-            updateCharacterReaction(player.position, isCorrect);
-
-            if (isCorrect) {
-                player.coins++;
-                document.getElementById('answerTitle').textContent = '✅ Correto! +1 Moeda';
-
-                // Efeitos visuais e sonoros para acerto
-                setTimeout(() => {
-                    createCoinVisualEffect();
-                    createStarsCelebration();
-                }, 500);
-            } else {
-                player.bombs++;
-                document.getElementById('answerTitle').textContent = '❌ Incorreto! +1 Bomba';
-
-                // Efeitos visuais e sonoros para erro
-                setTimeout(() => {
-                    createErrorVisualEffect();
-                    createExplosion();
-                }, 500);
-            }
-
-            document.getElementById('answerText').textContent = currentQuestion.explicacao;
-            updatePlayerDisplay();
-
-            document.getElementById('questionModal').style.display = 'none';
-            document.getElementById('answerModal').style.display = 'flex';
-        }
-
-        function showAnswer() {
-            // Esta função não é usada, o botão chama checkVFAnswer() diretamente.
-            closeModal();
-        }
-
-        function closeModal() {
-            document.getElementById('questionModal').style.display = 'none';
-            document.getElementById('answerModal').style.display = 'none';
-
-            // Alternar para o próximo jogador após fechar o modal
-            if (!gameState.gameEnded) {
-                switchPlayer();
-            }
-        }
-
-        function showCustomModal(title, message, buttons) {
-            document.getElementById('answerTitle').textContent = title;
-            document.getElementById('answerText').textContent = message;
-
-            const buttonContainer = document.querySelector('#answerModal .modal-buttons');
-            buttonContainer.innerHTML = '';
-
-            buttons.forEach(button => {
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-primary';
-                btn.textContent = button.text;
-                btn.onclick = button.action;
-                buttonContainer.appendChild(btn);
-            });
-
-            document.getElementById('answerModal').style.display = 'flex';
-        }
-
-        // Configuração do Element SDK
-        async function render(config) {
-            const gameTitle = config.game_title || defaultConfig.game_title;
-            const player1Name = config.player1_name || defaultConfig.player1_name;
-            const player2Name = config.player2_name || defaultConfig.player2_name;
-            const instructionsText = config.instructions_text || defaultConfig.instructions_text;
-
-            document.getElementById('gameTitle').textContent = gameTitle;
-            document.getElementById('player1Name').textContent = player1Name;
-            document.getElementById('player2Name').textContent = player2Name;
-            document.getElementById('instructionsText').textContent = instructionsText;
-
-            // Atualizar indicador de turno com os novos nomes
-            updatePlayerDisplay();
-        }
-
-        function mapToCapabilities(config) {
-            return {
-                recolorables: [
-                    {
-                        get: () => config.primary_color || '#4299e1',
-                        set: (value) => {
-                            config.primary_color = value;
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ primary_color: value });
-                            }
-                        }
-                    }
-                ],
-                borderables: [],
-                fontEditable: {
-                    get: () => config.font_family || 'Segoe UI',
-                    set: (value) => {
-                        config.font_family = value;
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ font_family: value });
-                        }
-                    }
-                },
-                fontSizeable: {
-                    get: () => config.font_size || 16,
-                    set: (value) => {
-                        config.font_size = value;
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ font_size: value });
-                        }
-                    }
-                }
-            };
-        }
-
-        function mapToEditPanelValues(config) {
-            return new Map([
-                ["game_title", config.game_title || defaultConfig.game_title],
-                ["player1_name", config.player1_name || defaultConfig.player1_name],
-                ["player2_name", config.player2_name || defaultConfig.defaultConfig.player2_name],
-                ["instructions_text", config.instructions_text || defaultConfig.instructions_text]
-            ]);
-        }
-
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeBoard();
-            updatePlayerDisplay();
-
-            // Tenta iniciar o vídeo automaticamente.
-            introVideo.play().catch(e => {
-                console.log("Auto-play do vídeo bloqueado. O usuário deve clicar em 'Começar o Jogo'.", e);
-            });
-
-            if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    render,
-                    mapToCapabilities,
-                    mapToEditPanelValues
+         function showCurrentPuzzle(caseNum) {
+            const currentPuzzNum = currentPuzzle[caseNum];
+            const totalPuzzlesInCase = PUZZLES_PER_CASE[caseNum];
+            console.log(`Mostrando Puzzle ${currentPuzzNum}/${totalPuzzlesInCase} do Caso ${caseNum}`);
+
+            document.querySelectorAll(`#case-${caseNum} .question-block`).forEach(el => el.classList.add('hidden'));
+            const successMsgElement = document.querySelector(`#success-${caseNum}`);
+            if(successMsgElement) successMsgElement.classList.add('hidden');
+
+            const puzzleToShow = document.querySelector(`#case-${caseNum} .question-block:nth-of-type(${currentPuzzNum})`);
+
+            if (puzzleToShow) {
+                puzzleToShow.classList.remove('hidden');
+                puzzleToShow.classList.add('fade-in');
+                puzzleToShow.querySelectorAll('.answer-btn').forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('bg-green-600', 'bg-red-600', 'shake');
+                    btn.classList.add('bg-gray-700');
+                    btn.innerHTML = btn.innerHTML.replace(' ✅', '').replace(' ❌', '');
                 });
+                 const oldFeedback = puzzleToShow.querySelector('.feedback-text');
+                 if(oldFeedback) oldFeedback.remove();
+            } else if (currentPuzzNum > totalPuzzlesInCase) {
+                 console.log(`Puzzles do caso ${caseNum} concluídos, mostrando sucesso.`);
+                 if (successMsgElement) {
+                    const buttonInSuccess = successMsgElement.querySelector('button');
+                    if(buttonInSuccess){
+                        buttonInSuccess.className = '';
+                        buttonInSuccess.classList.add('px-6', 'py-3', 'rounded-lg', 'font-bold', 'mt-4');
+                         if(caseNum === TOTAL_CASES) { buttonInSuccess.classList.add('bg-yellow-600', 'hover:bg-yellow-700', 'finish-button'); }
+                         else { buttonInSuccess.classList.add('bg-green-600', 'hover:bg-green-700', 'next-button'); }
+                    }
+                    successMsgElement.classList.remove('hidden');
+                    successMsgElement.classList.add('bg-green-900', 'bg-opacity-50', 'rounded-xl', 'p-6', 'border', 'border-green-500', 'text-center', 'fade-in');
+                 } else { console.error(`Mensagem de sucesso ${caseNum} não encontrada!`); }
+            } else { console.error(`Puzzle ${currentPuzzNum} do caso ${caseNum} não encontrado!`); }
+        }
+
+        function showWaitingMessage() {
+             document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
+             waitingMessage.classList.remove('hidden');
+             waitingMessage.classList.add('fade-in');
+             console.log("Mostrando mensagem de espera.");
+        }
+
+        // *** FUNÇÃO checkAnswer CORRIGIDA ***
+        function checkAnswer(caseNum, answerChoice, button) {
+            tocarSom('som-click');
+            const currentPuzzNum = currentPuzzle[caseNum];
+            const totalPuzzlesInCase = PUZZLES_PER_CASE[caseNum];
+
+            let questionIndex = 0;
+            for(let i = 1; i < caseNum; i++){ questionIndex += PUZZLES_PER_CASE[i]; }
+            questionIndex += (currentPuzzNum - 1);
+
+            const questionData = gameQuestions[questionIndex];
+
+            if (!questionData) { console.error(`Dados da pergunta não encontrados para caso ${caseNum}, puzzle ${currentPuzzNum}`); return; }
+
+            const correctAnswerValue = questionData.answer;
+            const puzzleBlock = button.closest('.question-block');
+            const answerButtons = puzzleBlock.querySelectorAll('.answer-btn');
+            answerButtons.forEach(btn => btn.disabled = true);
+
+            const oldFeedback = puzzleBlock.querySelector('.feedback-text');
+            if (oldFeedback) oldFeedback.remove();
+
+            if (answerChoice === correctAnswerValue) {
+                // Correto
+                console.log(`Caso ${caseNum}, Puzzle ${currentPuzzNum}: Correto!`);
+                tocarSom('som-correto');
+                button.classList.remove('bg-gray-700');
+                const colorsHover = ['blue', 'red', 'purple', 'teal', 'yellow'];
+                 // Remove o hover específico da sala ANTES de adicionar o verde
+                button.classList.remove(`hover:bg-${colorsHover[caseNum-1]}-600`);
+                button.classList.add('bg-green-600');
+                button.innerHTML += ' ✅';
+                gameState.score += 100;
+
+                setTimeout(() => {
+                    // Verifica se foi o último puzzle DESTA sala
+                    if (currentPuzzNum < totalPuzzlesInCase) {
+                        currentPuzzle[caseNum]++;
+                        showCurrentPuzzle(caseNum);
+                    } else {
+                        // Último puzzle da sala concluído, mostra mensagem de sucesso
+                        console.log(`Último puzzle do caso ${caseNum} concluído.`);
+                        puzzleBlock.classList.add('hidden'); // Esconde o puzzle atual
+                        // *** CORREÇÃO: Mostra a div de sucesso DIRETAMENTE ***
+                        const successMessage = document.getElementById(`success-${caseNum}`);
+                        if(successMessage){
+                             const buttonInSuccess = successMessage.querySelector('button');
+                             if(buttonInSuccess){
+                                buttonInSuccess.className = '';
+                                buttonInSuccess.classList.add('px-6', 'py-3', 'rounded-lg', 'font-bold', 'mt-4');
+                                if(caseNum === TOTAL_CASES) { buttonInSuccess.classList.add('bg-yellow-600', 'hover:bg-yellow-700', 'finish-button'); }
+                                else { buttonInSuccess.classList.add('bg-green-600', 'hover:bg-green-700', 'next-button'); }
+                            }
+                            successMessage.classList.remove('hidden');
+                            successMessage.classList.add('bg-green-900', 'bg-opacity-50', 'rounded-xl', 'p-6', 'border', 'border-green-500', 'text-center', 'fade-in');
+                        } else { console.error(`Mensagem de sucesso ${caseNum} não encontrada!`); }
+                         // *** FIM DA CORREÇÃO ***
+                    }
+                    updateScoreDisplay();
+                }, 1000);
+
+            } else {
+                 // Incorreto
+                 console.log(`Caso ${caseNum}, Puzzle ${currentPuzzNum}: Incorreto.`);
+                 tocarSom('som-incorreto');
+                 button.classList.remove('bg-gray-700');
+                 const colorsHover = ['blue', 'red', 'purple', 'teal', 'yellow'];
+                 button.classList.remove(`hover:bg-${colorsHover[caseNum-1]}-600`);
+                 button.classList.add('bg-red-600', 'shake');
+                 button.innerHTML += ' ❌';
+                 gameState.score = Math.max(0, gameState.score - 25);
+
+                 const feedbackP = document.createElement('p');
+                 feedbackP.textContent = `Explicação: ${questionData.feedback}`;
+                 feedbackP.classList.add('text-red-300', 'mt-3', 'text-sm', 'fade-in', 'feedback-text');
+                 button.parentElement.insertAdjacentElement('afterend', feedbackP);
+
+                 setTimeout(() => {
+                    answerButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('shake', 'bg-red-600', 'bg-green-600');
+                         btn.classList.add('bg-gray-700');
+                         const colors = ['blue', 'red', 'purple', 'teal', 'yellow'];
+                         // Garante que só adiciona UMA classe de hover
+                         btn.classList.remove(...colors.map(c => `hover:bg-${c}-600`));
+                         btn.classList.add(`hover:bg-${colors[caseNum-1]}-600`);
+                        btn.innerHTML = btn.innerHTML.replace(' ✅', '').replace(' ❌', '');
+                    });
+                    if(feedbackP) feedbackP.remove();
+                 }, 3000);
+                 updateScoreDisplay();
             }
-        });
+        }
+
+        function completeCase(caseNum) {
+            console.log(`completeCase(${caseNum}) chamada.`);
+            tocarSom('som-correto');
+            gameState.completedCases++;
+            updateProgressDisplay();
+
+            const status = document.getElementById(`status-${caseNum}`);
+            const room = document.getElementById(`room-${caseNum}`);
+            if (status && room) {
+                status.textContent = '✅';
+                status.classList.remove('bg-green-600');
+                status.classList.add('bg-blue-600');
+                room.classList.add('opacity-70');
+                room.onclick = null;
+                 console.log(`Status e clique da Sala ${caseNum} atualizados.`);
+            } else { console.error(`Erro ao encontrar elementos da Sala ${caseNum}.`); }
+
+            if (gameState.completedCases < TOTAL_CASES) {
+                 console.log(`Desbloqueando Sala ${caseNum + 1} e mostrando espera.`);
+                unlockRoom(caseNum + 1);
+                showWaitingMessage();
+            } else {
+                 console.log("Todas as salas completas. Chamando gameOver(true).");
+                gameOver(true);
+            }
+        }
+
+        function gameOver(isVictory) {
+            console.log(`Fim de jogo. Vitória: ${isVictory}`);
+            clearInterval(gameState.timer);
+            gameState.gameStarted = false;
+            jogoIniciado = false;
+
+            if (isVictory) {
+                tocarSom('som-vitoria');
+                gameBoard.classList.add('hidden');
+                victoryScreen.classList.remove('hidden');
+                victoryScreen.classList.add('fade-in');
+
+                const timeTaken = INITIAL_TIME - gameState.timeLeft;
+                const minutes = Math.floor(timeTaken / 60);
+                const seconds = timeTaken % 60;
+                const timeBonus = Math.max(0, gameState.timeLeft * 2);
+                gameState.score += timeBonus;
+
+                document.getElementById('final-time').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('final-score').textContent = gameState.score;
+
+            } else {
+                tocarSom('som-gameover');
+                alert('⏰ Tempo esgotado! Você não conseguiu completar a jornada a tempo. Tente novamente!');
+                restartGame();
+            }
+        }
+
+        function restartGame() {
+            console.log("Reiniciando o jogo...");
+            tocarSom('som-click');
+            clearInterval(gameState.timer);
+
+            victoryScreen.classList.add('hidden');
+            gameBoard.classList.add('hidden');
+            introScreen.classList.remove('hidden');
+
+            timerDisplay.textContent = `${Math.floor(INITIAL_TIME / 60).toString().padStart(2, '0')}:${(INITIAL_TIME % 60).toString().padStart(2, '0')}`;
+            timerDisplay.classList.remove('text-red-500', 'pulse'); timerDisplay.classList.add('text-yellow-400');
+            scoreDisplay.textContent = '0'; progressDisplay.textContent = `0/${TOTAL_CASES}`;
+
+            for (let i = 1; i <= TOTAL_CASES; i++) {
+                const room = document.getElementById(`room-${i}`); const status = document.getElementById(`status-${i}`);
+                if (room && status) {
+                    room.classList.remove('opacity-70'); room.onclick = () => enterRoom(i);
+                    if (i > 1) { room.classList.add('locked'); status.textContent = '🔒'; status.classList.remove('bg-green-600', 'bg-blue-600'); status.classList.add('bg-gray-600'); }
+                    else { room.classList.remove('locked'); status.textContent = '🔒'; status.classList.remove('bg-green-600', 'bg-blue-600'); status.classList.add('bg-gray-600'); }
+                }
+            }
+
+            document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
+            showWaitingMessage();
+
+             document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.disabled = false; btn.classList.remove('bg-green-600', 'bg-red-600', 'shake'); btn.classList.add('bg-gray-700');
+                 const caseNumStr = btn.closest('.case-content')?.id.split('-')[1];
+                 if(caseNumStr) {
+                    const caseNum = parseInt(caseNumStr); const colors = ['blue', 'red', 'purple', 'teal', 'yellow'];
+                    // Remove todas as cores de hover antes de adicionar a correta
+                    btn.classList.remove(...colors.map(c => `hover:bg-${c}-600`));
+                    if(caseNum >=1 && caseNum <= colors.length) { btn.classList.add(`hover:bg-${colors[caseNum-1]}-600`); }
+                 }
+                btn.innerHTML = btn.innerHTML.replace(' ✅', '').replace(' ❌', '');
+            });
+            document.querySelectorAll('.feedback-text').forEach(p => p.remove());
+            document.querySelectorAll('[id^="puzzle-2-case-"],[id^="puzzle-3-case-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.success-message').forEach(el => el.classList.add('hidden'));
+
+            initializeGameState(); // Reseta o estado
+            console.log("Jogo reiniciado. Pronto para começar.");
+        }
+
+        // --- Inicialização ---
+        console.log("Adicionando listeners...");
+        if (playButton) playButton.addEventListener('click', tocarVideoIntro); else console.error("ERRO CRÍTICO: Botão #play-video não encontrado!");
+        if (introVideo) introVideo.addEventListener('ended', handleVideoEnd); else console.error("ERRO CRÍTICO: Vídeo #intro-video não encontrado!");
+        if (skipButton) skipButton.addEventListener('click', handleVideoEnd); else console.error("ERRO CRÍTICO: Botão #skip-video não encontrado!");
+        const restartBtnVictory = victoryScreen ? victoryScreen.querySelector('button') : null;
+        if(restartBtnVictory) restartBtnVictory.addEventListener('click', restartGame); else console.warn("Botão de reiniciar não encontrado na tela de vitória!");
+        initializeGameState(); // Inicializa ao carregar
+        updateUI();
+        console.log("Script carregado e pronto.");
+
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992b1b96441302fc',t:'MTc2MTE1ODI2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
