@@ -1,181 +1,1311 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabuleiro Imersivo - Educação Sexual</title>
-    <script src="/_sdk/element_sdk.js"></script> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="/_sdk/element_sdk.js"></script>
     <style>
-        /* Estilos Gerais */
+        /* [ESTILOS CSS INICIAIS - MANTIDOS] */
         body {
-            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            padding: 10px;
             box-sizing: border-box;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: transparent;
+            min-height: 100%;
             color: #333;
+            overflow-x: auto;
+            position: relative;
         }
 
-        /* Container Principal do Jogo */
-        .game-wrapper {
-            background: rgba(255, 255, 255, 0.15);
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bubble:nth-child(1) {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #45b7d1, #96c93d);
+            left: 35%;
+            animation-delay: 4s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #96ceb4, #feca57);
+            left: 50%;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #feca57, #ff9ff3);
+            left: 70%;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(6) {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ff9ff3, #667eea);
+            left: 80%;
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-10vh) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Efeitos Visuais de Áudio */
+        .music-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .music-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .music-button.playing {
+            animation: music-pulse 2s infinite;
+        }
+
+        @keyframes music-pulse {
+            0%, 100% {
+                box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            50% {
+                box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 0 0 15px rgba(102, 126, 234, 0);
+            }
+        }
+
+        .sound-waves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        .sound-wave {
+            position: absolute;
+            border: 3px solid;
+            border-radius: 50%;
+            animation: sound-wave-expand 1.5s ease-out forwards;
+        }
+
+        @keyframes sound-wave-expand {
+            0% {
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+            }
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+
+        .dice-visual-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            z-index: 2500;
+            pointer-events: none;
+            animation: dice-bounce 1s ease-out forwards;
+        }
+
+        @keyframes dice-bounce {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                transform: translate(-50%, -50%) scale(1.3) rotate(90deg);
+                opacity: 1;
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(0.8) rotate(180deg);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(270deg);
+                opacity: 1;
+            }
+            80% {
+                transform: translate(-50%, -50%) scale(0.9) rotate(360deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0) rotate(450deg);
+                opacity: 0;
+            }
+        }
+
+        .move-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #4299e1, #3182ce, transparent);
+            border-radius: 50%;
+            animation: move-trail-fade 1s ease-out forwards;
+            z-index: 15;
+        }
+
+        @keyframes move-trail-fade {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 15px #4299e1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.7;
+                box-shadow: 0 0 25px #4299e1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+                box-shadow: 0 0 5px #4299e1;
+            }
+        }
+
+        .coin-visual-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            z-index: 2600;
+            pointer-events: none;
+            animation: coin-spin 2s ease-out forwards;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+        }
+
+        @keyframes coin-spin {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotateY(0deg);
+                opacity: 0;
+            }
+            15% {
+                transform: translate(-50%, -50%) scale(1.5) rotateY(180deg);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(1) rotateY(360deg);
+                opacity: 1;
+            }
+             45% {
+                transform: translate(-50%, -50%) scale(1.3) rotateY(540deg);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(0.8) rotateY(720deg);
+                opacity: 1;
+            }
+            75% {
+                transform: translate(-50%, -50%) scale(1.1) rotateY(900deg);
+                opacity: 1;
+            }
+            90% {
+                transform: translate(-50%, -50%) scale(0.9) rotateY(1080deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0) rotateY(1260deg);
+                opacity: 0;
+            }
+        }
+
+        .error-visual-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            z-index: 2600;
+            pointer-events: none;
+            animation: error-shake 1.5s ease-out forwards;
+            text-shadow: 0 0 20px rgba(255, 69, 0, 0.9);
+        }
+
+        @keyframes error-shake {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            10% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 1;
+            }
+            15% {
+                transform: translate(-45%, -50%) scale(1.2);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(-55%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            35% {
+                transform: translate(-48%, -50%) scale(1.2);
+                opacity: 1;
+            }
+            45% {
+                transform: translate(-52%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            55% {
+                transform: translate(-49%, -50%) scale(1.15);
+                opacity: 1;
+            }
+            65% {
+                transform: translate(-51%, -50%) scale(1.05);
+                opacity: 1;
+            }
+            75% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+            85% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .victory-visual-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            z-index: 2700;
+            pointer-events: none;
+            animation: victory-celebration 3s ease-out forwards;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 1);
+        }
+
+        @keyframes victory-celebration {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            15% {
+                transform: translate(-50%, -50%) scale(1.5) rotate(72deg);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(144deg);
+                opacity: 1;
+            }
+            45% {
+                transform: translate(-50%, -50%) scale(1.4) rotate(216deg);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(288deg);
+                opacity: 1;
+            }
+            75% {
+                transform: translate(-50%, -50%) scale(1.3) rotate(360deg);
+                opacity: 1;
+            }
+            85% {
+                transform: translate(-50%, -50%) scale(1) rotate(432deg);
+                opacity: 0.8;
+            }
+            95% {
+                transform: translate(-50%, -50%) scale(0.7) rotate(504deg);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0) rotate(576deg);
+                opacity: 0;
+            }
+        }
+
+        .roulette-glow {
+            animation: roulette-glow-pulse 0.5s ease-in-out;
+        }
+
+        @keyframes roulette-glow-pulse {
+            0% {
+                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            }
+            50% {
+                box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 0 30px rgba(255, 215, 0, 0.8);
+            }
+            100% {
+                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            }
+        }
+
+        .player-move-glow {
+            animation: player-move-glow 1s ease-out;
+        }
+
+        @keyframes player-move-glow {
+            0% {
+                box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            }
+            50% {
+                box-shadow: 0 3px 6px rgba(0,0,0,0.4), 0 0 20px rgba(66, 153, 225, 0.8);
+            }
+            100% {
+                box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            }
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 25px;
-            padding: clamp(10px, 3vw, 20px); /* Padding responsivo */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 95vmin;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Cabeçalho, Infos Jogador, Turno */
-        .game-header { text-align: center; margin-bottom: 15px; }
-        .game-title { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 600; background: linear-gradient(135deg, #5a67d8, #8a4baf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 5px; }
-        .instructions { font-size: clamp(0.75rem, 2vw, 0.9rem); color: #4a5568; margin-bottom: 10px; }
-        .players-info { display: flex; justify-content: space-around; width: 100%; max-width: 600px; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
-        .player-card { flex: 1 1 160px; background: linear-gradient(135deg, #4299e1, #3182ce); color: white; padding: 8px 12px; border-radius: 12px; text-align: center; box-shadow: 0 6px 12px rgba(0,0,0,0.1); border: 2px solid transparent; transition: all 0.3s ease; font-size: clamp(0.7rem, 1.8vw, 0.85rem); }
-        .player-card.active { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); transform: scale(1.03); }
-        .player-card.player2 { background: linear-gradient(135deg, #e53e3e, #c53030); }
-        .player-name { font-size: clamp(0.8rem, 2vw, 1rem); font-weight: 600; margin-bottom: 4px; }
-        .player-stats { display: flex; justify-content: space-around; margin-top: 6px; }
-        .stat { display: flex; align-items: center; gap: 4px; font-size: clamp(0.8rem, 1.9vw, 0.9rem); }
-        .coins { color: #ffd700; } .bombs { color: #ff9a9a; }
-        .game-info { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
-        .turn-indicator { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 7px 18px; border-radius: 20px; font-size: clamp(0.85rem, 2.1vw, 1rem); font-weight: 600; box-shadow: 0 6px 12px rgba(0,0,0,0.15); text-align: center; min-width: 160px; }
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-        /* Container do Tabuleiro */
+        .game-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .instructions {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .players-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .player-card {
+            flex: 1;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .player-card.active {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        .player-card.player2 {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+
+        .player-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .player-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.1rem;
+        }
+
+        .coins {
+            color: #ffd700;
+        }
+
+        .bombs {
+            color: #ff6b6b;
+        }
+
         .board-container {
             position: relative;
-            width: 70vmin;
-            height: 70vmin;
-            max-width: 600px;
-            max-height: 600px;
-            margin-bottom: 15px;
-        }
-        .board { width: 100%; height: 100%; position: relative; }
-
-        /* Estilo das Casas (Quadrado com Imagem de Fundo) */
-        .square {
-            width: 80px;  /* Largura original */
-            height: 100px; /* Altura original */
-            border: 3px solid rgba(255, 255, 255, 0.7);
-            border-radius: 15px; /* Raio original */
+            margin: 30px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-end; /* Conteúdo em baixo */
-            padding-bottom: 5px; /* Espaço para label */
-            font-weight: 600;
+            gap: 40px;
+            overflow: visible;
+            min-height: 700px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 15px;
+            background: transparent;
+            padding: 40px;
+            border-radius: 50%;
+            width: 600px;
+            height: 600px;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            overflow: visible;
+            contain: layout;
+        }
+
+        .square {
+            width: 80px;
+            height: 100px;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
             font-size: 0.7rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: absolute;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.1); /* Fallback */
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            animation: float-gentle 3s ease-in-out infinite;
+            overflow: visible;
+            background: white;
+        }
+
+        .character-card {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 140px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            border: 3px solid #4299e1;
+            animation: cardAppear 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        .character-card.show {
+            display: flex;
+        }
+
+        .character-card.happy {
+            border-color: #48bb78;
+            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+        }
+
+        .character-card.sad {
+            border-color: #e53e3e;
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+        }
+
+        @keyframes cardAppear {
+            0% {
+                transform: translateX(-50%) scale(0) rotate(180deg);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(-50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .character-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            transition: all 0.3s ease;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
-        /* Casas Especiais (Início/Fim) */
-        .square.start, .square.finish {
-            width: 90px; height: 110px; /* Tamanho original maior */
-            justify-content: center; /* Centraliza conteúdo */
-            padding-bottom: 0;
-            background-image: none !important; /* Sem imagem de fundo */
-            color: #333;
-            text-shadow: none;
+        .character-avatar.has-image {
+            font-size: 0;
         }
-        .square.start { background: linear-gradient(135deg, #e6f3ff, #bee3f8); border-color: rgba(66, 153, 225, 0.8); }
-        .square.finish { background: linear-gradient(135deg, #f0e6ff, #e9d8fd); border-color: rgba(159, 122, 234, 0.8); animation: pulse-float 2s infinite, float-gentle 3s ease-in-out infinite; } /* Re-adicionada float-gentle */
-        @keyframes pulse-float { 0%, 100% { box-shadow: 0 5px 15px rgba(0,0,0,0.1), 0 0 0 0 rgba(159, 122, 234, 0.7); transform: scale(1); } 50% { box-shadow: 0 5px 15px rgba(0,0,0,0.1), 0 0 0 10px rgba(159, 122, 234, 0); transform: scale(1.05); } }
 
-        /* Elemento interno para emoji (Start/Finish) */
+        .character-avatar.happy {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        .character-avatar.sad {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            animation: shake 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .explosion-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(255,140,0,0.6) 30%, rgba(255,215,0,0.4) 60%, transparent 100%);
+            z-index: 2000;
+            display: none;
+            animation: explode 1.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            20% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .explosion-particles {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 2001;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff4500;
+            border-radius: 50%;
+            animation: particle-explosion 1.5s ease-out forwards;
+        }
+
+        @keyframes particle-explosion {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--end-x, 100px), var(--end-y, 100px)) scale(0);
+            }
+        }
+
+        .screen-shake {
+            animation: screen-shake 0.8s ease-in-out;
+        }
+
+        @keyframes screen-shake {
+            0%, 100% { transform: translateX(0); }
+            10% { transform: translateX(-10px) translateY(-5px); }
+            20% { transform: translateX(10px) translateY(5px); }
+            30% { transform: translateX(-8px) translateY(-3px); }
+            40% { transform: translateX(8px) translateY(3px); }
+            50% { transform: translateX(-6px) translateY(-2px); }
+            60% { transform: translateX(6px) translateY(2px); }
+            70% { transform: translateX(-4px) translateY(-1px); }
+            80% { transform: translateX(4px) translateY(1K); }
+            90% { transform: translateX(-2px); }
+        }
+
+        .stars-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .dancing-star {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: star-dance 2.5s ease-in-out forwards;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+        }
+
+        @keyframes star-dance {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            15% {
+                transform: scale(1.3) rotate(72deg);
+                opacity: 1;
+            }
+            30% {
+                transform: scale(0.7) rotate(144deg);
+                opacity: 1;
+            }
+            45% {
+                transform: scale(1.1) rotate(216deg);
+                opacity: 1;
+            }
+            60% {
+                transform: scale(0.9) rotate(288deg);
+                opacity: 1;
+            }
+            75% {
+                transform: scale(1.2) rotate(360deg);
+                opacity: 1;
+            }
+            90% {
+                transform: scale(0.8) rotate(432deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(0) rotate(504deg);
+                opacity: 0;
+            }
+        }
+
+        .star-trail {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffd700, #ffed4e, transparent);
+            border-radius: 50%;
+            animation: trail-sparkle 2s ease-out forwards;
+        }
+
+        @keyframes trail-sparkle {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 10px #ffd700;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+                box-shadow: 0 0 20px #ffd700;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+                box-shadow: 0 0 5px #ffd700;
+            }
+        }
+
+        .flying-comet {
+            position: absolute;
+            font-size: 2rem;
+            animation: comet-flight 3s ease-in-out forwards;
+            text-shadow: 0 0 20px rgba(255, 140, 0, 0.9);
+            filter: drop-shadow(0 0 10px rgba(255, 69, 0, 0.8));
+            z-index: 2600;
+        }
+
+        @keyframes comet-flight {
+            0% {
+                transform: scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                transform: scale(1) rotate(45deg);
+                opacity: 1;
+            }
+            90% {
+                transform: scale(1.2) rotate(405deg);
+                opacity: 1;
+                left: var(--end-x);
+                top: var(--end-y);
+            }
+            100% {
+                transform: scale(0) rotate(450deg);
+                opacity: 0;
+                left: var(--end-x);
+                top: var(--end-y);
+            }
+        }
+
+        .comet-trail {
+            position: absolute;
+            width: 3px;
+            height: 60px;
+            background: linear-gradient(to bottom,
+                rgba(255, 140, 0, 0.9) 0%,
+                rgba(255, 69, 0, 0.7) 30%,
+                rgba(255, 215, 0, 0.5) 60%,
+                transparent 100%);
+            border-radius: 50px;
+            animation: comet-trail-flight 3s ease-in-out forwards;
+            transform-origin: center top;
+            z-index: 2550;
+        }
+
+        @keyframes comet-trail-flight {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                transform: scale(1) rotate(45deg);
+                opacity: 0.8;
+            }
+            90% {
+                transform: scale(1.5) rotate(405deg);
+                opacity: 0.6;
+                left: var(--trail-end-x);
+                top: var(--trail-end-y);
+            }
+            100% {
+                transform: scale(0) rotate(450deg);
+                opacity: 0;
+                left: var(--trail-end-x);
+                top: var(--trail-end-y);
+            }
+        }
+
+        .character-message {
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            color: #4a5568;
+            margin-top: 5px;
+        }
+
+        .character-message.happy {
+            color: #2f855a;
+        }
+
+        .character-message.sad {
+            color: #c53030;
+        }
+
+        .square:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: rgba(255, 215, 0, 0.8);
+        }
+
         .square-character {
-            font-size: 2.5rem; /* Tamanho original do emoji */
-            line-height: 1;
+            /* Tamanho ajustado para o ícone/imagem */
+            width: 60px; 
+            height: 60px;
+            border-radius: 50%;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem; /* Para emojis Início/Fim */
+            background-size: cover; /* Para as imagens de personagem */
+            background-position: center;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
         }
 
-        /* Rótulo (Número ou Texto) */
         .square-number {
-            font-size: 0.8rem; /* Tamanho original */
-            font-weight: 600;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.45);
-            padding: 2px 6px; /* Padding original */
-            border-radius: 8px; /* Raio original */
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #4a5568;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-top: 2px;
+        }
+
+        @keyframes float-gentle {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .square.normal {
+            background: linear-gradient(135deg, #e8f5e8, #c6f6d5);
+            border-color: rgba(72, 187, 120, 0.8);
+        }
+
+        .square.vf {
+            background: linear-gradient(135deg, #fff5e6, #fed7aa);
+            border-color: rgba(237, 137, 54, 0.8);
+        }
+
+        .square.start {
+            background: linear-gradient(135deg, #e6f3ff, #bee3f8);
+            border-color: rgba(66, 153, 225, 0.8);
+            width: 90px;
+            height: 110px;
+        }
+
+        .square.finish {
+            background: linear-gradient(135deg, #f0e6ff, #e9d8fd);
+            border-color: rgba(159, 122, 234, 0.8);
+            width: 90px;
+            height: 110px;
+            animation: pulse-float 2s infinite, float-gentle 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-float {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(159, 122, 234, 0.7);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(159, 122, 234, 0);
+                transform: scale(1.1);
+            }
+        }
+
+        .player {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            top: -10px;
+            z-index: 10;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .player.player1 {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            right: -10px;
+        }
+
+        .player.player2 {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            right: -30px;
+        }
+
+        .roulette-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .roulette {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff6b6b 0deg 60deg,
+                #4ecdc4 60deg 120deg,
+                #45b7d1 120deg 180deg,
+                #96ceb4 180deg 240deg,
+                #feca57 240deg 300deg,
+                #ff9ff3 300deg 360deg
+            );
+            border: 8px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            z-index: 3;
-            display: inline-block;
-             /* margin-top removido, usa flex-end no .square */
-        }
-        /* Cor diferente para label de Start/Finish */
-        .square.start .square-number,
-        .square.finish .square-number {
-            color: #4a5568; /* Cor original */
-            background: rgba(255, 255, 255, 0.85);
-            margin-top: 5px; /* Espaço abaixo do emoji */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
         }
 
-        .square:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-color: #ffd700; z-index: 5; }
-        @keyframes float-gentle { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
-
-        /* Card Pop-up */
-        .character-card { position: absolute; top: -75px; left: 50%; transform: translateX(-50%); width: 110px; height: 125px; background: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 50; border: 2px solid #4299e1; animation: cardAppear 0.4s ease-out; pointer-events: none; } .character-card.show { display: flex; } .character-card.happy { border-color: #48bb78; } .character-card.sad { border-color: #e53e3e; } @keyframes cardAppear { 0% { transform: translateX(-50%) translateY(10px) scale(0.8); opacity: 0; } 100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; } } .character-avatar { width: 50px; height: 50px; border-radius: 50%; margin-bottom: 5px; background-size: cover; background-position: center; } .character-message { font-size: 0.7rem; font-weight: 600; text-align: center; color: #4a5568; padding: 0 5px; } .character-message.happy { color: #2f855a; } .character-message.sad { color: #c53030; }
-
-        /* Jogadores (pinos) */
-        .player { position: absolute; width: 18px; height: 18px; border-radius: 50%; border: 2px solid white; top: 5px; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; transition: all 0.3s ease; } .player.player1 { background: linear-gradient(135deg, #4facfe, #00f2fe); left: 5px; } .player.player2 { background: linear-gradient(135deg, #f093fb, #f5576c); right: 5px; }
-
-        /* Roleta */
-        .roulette-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 10; } .roulette { width: clamp(120px, 25vmin, 160px); height: clamp(120px, 25vmin, 160px); border-radius: 50%; background: conic-gradient( #ff7e7e 0deg 60deg, #7afcff 60deg 120deg, #7affd4 120deg 180deg, #ffe07a 180deg 240deg, #ff7afc 240deg 300deg, #a07aff 300deg 360deg ); border: 6px solid rgba(255, 255, 255, 0.9); box-shadow: 0 10px 25px rgba(0,0,0,0.15); cursor: pointer; transition: transform 0.3s ease; position: relative; display: flex; align-items: center; justify-content: center; } .roulette:hover { transform: scale(1.05); } .roulette.spinning { animation: spin 2.5s cubic-bezier(0.25, 1, 0.5, 1); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(1440deg); } } .roulette-center { width: clamp(40px, 8vmin, 50px); height: clamp(40px, 8vmin, 50px); background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 3vmin, 1.8rem); font-weight: bold; color: #555; box-shadow: inset 0 3px 6px rgba(0,0,0,0.1); } .roulette-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #ffcc00; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
-
-        /* Legenda */
-        .legend { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; width: 100%; max-width: 600px; } .legend-item { display: flex; align-items: center; gap: 6px; font-size: clamp(0.7rem, 1.8vw, 0.8rem); color: #444; } .legend-color { width: 16px; height: 16px; border-radius: 4px; border: 1px solid #ccc; background-size: cover; background-position: center;}
-
-        /* Modais */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; } .modal-content { background: white; padding: 25px; border-radius: 15px; max-width: 90vw; width: 450px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.25); } .modal h3 { color: #4a5568; margin-top: 0; margin-bottom: 15px; font-size: clamp(1.2rem, 3vw, 1.5rem); } .modal p { line-height: 1.6; margin-bottom: 20px; color: #718096; font-size: clamp(0.9rem, 2.2vw, 1rem); } .modal-buttons { display: flex; gap: 10px; justify-content: center; } .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: clamp(0.8rem, 2vw, 0.9rem); } .btn-primary { background: #4299e1; color: white; } .btn-primary:hover { background: #3182ce; transform: translateY(-2px); } .btn-secondary { background: #e2e8f0; color: #4a5568; } .btn-secondary:hover { background: #cbd5e0; transform: translateY(-2px); } .vf-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 15px; } .btn-true { background: #48bb78; color: white; } .btn-true:hover { background: #38a169; } .btn-false { background: #e53e3e; color: white; } .btn-false:hover { background: #c53030; }
-
-        /* Estilo Video Modal (CORRIGIDO - SEM !important) */
-        #videoModal {
-            display: flex; /* Exibe por padrão */
+        .roulette:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
         }
-        #videoModal .modal-content { max-width: 800px; width: 90%; padding: 0; overflow: hidden; }
-        #videoModal iframe, #videoModal video { display: block; width: 100%; height: auto; max-height: 70vh; background: #000; }
-        #videoModal .modal-buttons { padding: 15px; }
 
-        /* Responsividade */
-        @media (max-width: 700px) { .board-container { width: 85vmin; height: 85vmin; } .square { width: 11%; height: 13%; } .square.start, .square.finish { width: 13%; height: 15%; } .player { width: 15px; height: 15px; font-size: 0.6rem; top: 3px; left: 3px;} .player.player2 { right: 3px; } }
-        @media (max-width: 600px) { .players-info { flex-direction: column; gap: 8px; } .player-card { flex-basis: auto; } .roulette-container { gap: 10px; } }
+        .roulette.spinning {
+            animation: spin 2s ease-out;
+        }
 
-        /* Efeitos Visuais Adicionais */
-        .bubbles, .explosion-overlay, .explosion-particles, .stars-celebration, .sound-waves, .dice-visual-effect, .move-trail, .coin-visual-effect, .error-visual-effect, .victory-visual-effect { /* Mantidos da versão anterior */ }
-        /* ... (Cole os keyframes e estilos específicos desses efeitos aqui, se necessário) ... */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(1800deg); }
+        }
 
+        .roulette-center {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a5568;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .roulette-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ffd700;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .turn-indicator {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #edf2f7, #e2e8f0);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .winner-announcement {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #2d3748;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
+            animation: celebration 1s ease-in-out;
+        }
+
+        @keyframes celebration {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal h3 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .modal p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #718096;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+        }
+
+        .vf-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-true {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-true:hover {
+            background: #38a169;
+        }
+
+        .btn-false {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-false:hover {
+            background: #c53030;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 20px;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .board {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 6px;
+                padding: 15px;
+            }
+
+            .square {
+                font-size: 0.8rem;
+                padding: 3px;
+            }
+
+            .dice {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <style>
+        /* Estilos específicos do Modal de Vídeo */
+        #videoModal .modal-content {
+            max-width: 800px;
+            width: 90%;
+            padding: 0;
+            overflow: hidden;
+        }
+        #videoModal iframe, #videoModal video {
+            display: block;
+            width: 100%;
+            height: 450px;
+            background: #000;
+        }
+        #videoModal .modal-buttons {
+            padding: 20px;
+        }
+        @media (max-width: 768px) {
+            #videoModal iframe, #videoModal video {
+                height: 300px;
+            }
+        }
     </style>
     <style>@view-transition { navigation: auto; }</style>
-    <script src="/_sdk/data_sdk.js" type="text/javascript"></script> </head>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
 <body>
-    <audio id="bgm" src="assets/audio/bgm.mp3" loop></audio>
-    <audio id="audioDice" src="assets/audio/dice_roll.ogg"></audio>
-    <audio id="audioCoin" src="assets/audio/coin.wav"></audio>
-    <audio id="audioError" src="assets/audio/error.mp3"></audio>
-    <audio id="audioWin" src="assets/audio/win.wav"></audio>
+    <audio id="bgm" src="assets/bgm.mp3" loop></audio>
+    <audio id="audioDice" src="assets/dice_roll.ogg"></audio>
+    <audio id="audioCoin" src="assets/coin.wav"></audio>
+    <audio id="audioError" src="assets/error.mp3"></audio>
+    <audio id="audioWin" src="assets/win.wav"></audio>
 
-    <div class="bubbles"> <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div> <div class="bubble"></div> </div>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
     <div class="explosion-overlay" id="explosionOverlay"></div>
     <div class="explosion-particles" id="explosionParticles"></div>
     <div class="stars-celebration" id="starsCelebration"></div>
@@ -184,345 +1314,1119 @@
 
     <div class="modal" id="videoModal" style="display: flex;">
         <div class="modal-content">
-            <h3 id="videoModalTitle" style="padding: 15px 15px 0;">Bem-vindo(a)!</h3>
-            <video id="introVideo" controls autoplay>
-                <source src="assets/video/1000007047.mp4" type="video/mp4"> Seu navegador não suporta vídeo.
+            <h3 id="videoModalTitle" style="padding: 20px 20px 0;">Bem-vindo(a) ao Jogo da Saúde Sexual!</h3>
+            <video id="introVideo" width="100%" height="450" controls autoplay>
+                <source src="assets/video/1000007047.mp4" type="video/mp4">
+                Seu navegador não suporta a tag de vídeo.
             </video>
-            <div class="modal-buttons">
-                <button class="btn btn-primary" onclick="closeVideoModal()">Começar Jogo</button>
+            <div class="modal-buttons" style="padding: 20px;">
+                <button class="btn btn-primary" onclick="closeVideoModal()">Começar o Jogo</button>
             </div>
         </div>
     </div>
 
-    <div class="game-wrapper">
+    <div class="game-container">
         <div class="game-header">
-            <h1 class="game-title" id="gameTitle">Tabuleiro Imersivo</h1>
-            <p class="instructions" id="instructionsText">Clique na roleta para jogar!</p>
+            <h1 class="game-title" id="gameTitle">Tabuleiro Imersivo - Educação Sexual</h1>
+            <p class="instructions" id="instructionsText">Clique na roleta para jogar! Respostas certas ganham moedas, erradas ganham bombas!</p>
         </div>
-
         <div class="players-info">
             <div class="player-card player1 active" id="player1Card">
-                <div class="player-name" id="player1Name"> J1 </div>
-                <div> Posição: <span id="player1Position">1</span>/40 </div>
-                <div class="player-stats"> <div class="stat coins"> 🪙 <span id="player1Coins">0</span> </div> <div class="stat bombs"> 💣 <span id="player1Bombs">0</span> </div> </div>
+                <div class="player-name" id="player1Name">
+                    Jogador 1
+                </div>
+                <div>
+                    Posição: <span id="player1Position">1</span>/40
+                </div>
+                <div class="player-stats">
+                    <div class="stat coins">
+                        🪙 <span id="player1Coins">0</span>
+                    </div>
+                    <div class="stat bombs">
+                        💣 <span id="player1Bombs">0</span>
+                    </div>
+                </div>
             </div>
             <div class="player-card player2" id="player2Card">
-                <div class="player-name" id="player2Name"> J2 </div>
-                <div> Posição: <span id="player2Position">1</span>/40 </div>
-                <div class="player-stats"> <div class="stat coins"> 🪙 <span id="player2Coins">0</span> </div> <div class="stat bombs"> 💣 <span id="player2Bombs">0</span> </div> </div>
+                <div class="player-name" id="player2Name">
+                    Jogador 2
+                </div>
+                <div>
+                    Posição: <span id="player2Position">1</span>/40
+                </div>
+                <div class="player-stats">
+                    <div class="stat coins">
+                        🪙 <span id="player2Coins">0</span>
+                    </div>
+                    <div class="stat bombs">
+                        💣 <span id="player2Bombs">0</span>
+                    </div>
+                </div>
             </div>
         </div>
-
         <div class="game-info">
-            <div class="turn-indicator" id="turnIndicator"> Vez do J1 </div>
+            <div class="turn-indicator" id="turnIndicator">
+                Vez do Jogador 1
+            </div>
         </div>
-
         <div class="board-container">
-            <div class="board" id="gameBoard">
-                </div>
+            <div class="board" id="gameBoard"></div>
             <div class="roulette-container">
-                <div class="roulette" id="roulette"> <div class="roulette-pointer"></div>
-                    <div class="roulette-center" id="rouletteResult">🎲</div>
+                <div class="roulette" id="roulette" onclick="spinRoulette()">
+                    <div class="roulette-pointer"></div>
+                    <div class="roulette-center" id="rouletteResult">
+                        🎯
+                    </div>
+                </div>
+                <div style="text-align: center; color: #4a5568; font-weight: bold;">
+                    🎲 Clique para rolar o dado!
                 </div>
             </div>
         </div>
-
         <div class="legend">
-             <div class="legend-item"> <div class="legend-color" style="background: linear-gradient(135deg, #e6f3ff, #bee3f8);"></div><span>Início</span> </div>
-             <div class="legend-item"> <div class="legend-color" style="background-image: url('assets/img/20251020_222254_0002.jpg'); border-color: rgba(72, 187, 120, 0.8);"></div><span>Pergunta</span> </div>
-             <div class="legend-item"> <div class="legend-color" style="background-image: url('assets/img/20251020_222254_0001.jpg'); border-color: rgba(237, 137, 54, 0.8);"></div><span>Risco</span> </div>
-             <div class="legend-item"> <div class="legend-color" style="background: linear-gradient(135deg, #f0e6ff, #e9d8fd);"></div><span>Fim</span> </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #e6f3ff, #bee3f8);"></div><span>Início</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #e8f5e8, #c6f6d5);"></div><span>Pergunta (V/F)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #fff5e6, #fed7aa);"></div><span>Pergunta de Risco (V/F)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #f0e6ff, #e9d8fd);"></div><span>Fim</span>
+            </div>
         </div>
     </div>
-
-    <div class="modal" id="questionModal"> <div class="modal-content"> <h3 id="modalTitle">Pergunta</h3> <p id="modalQuestion"></p> <div id="modalButtons" class="modal-buttons"></div> </div> </div>
-    <div class="modal" id="answerModal"> <div class="modal-content"> <h3 id="answerTitle">Resposta</h3> <p id="answerText"></p> <div class="modal-buttons"><button class="btn btn-primary" onclick="closeModal()">Continuar</button> </div> </div> </div>
-
+    
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Pergunta</h3>
+            <p id="modalQuestion"></p>
+            <div id="modalButtons" class="modal-buttons"><button class="btn btn-primary" onclick="showAnswer()">Ver Resposta</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="answerModal">
+        <div class="modal-content">
+            <h3 id="answerTitle">Resposta</h3>
+            <p id="answerText"></p>
+            <div class="modal-buttons"><button class="btn btn-primary" onclick="closeModal()">Continuar</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
+        // Array para as casas NORMAIS (convertidas para V/F)
         const perguntasInformativas = [
-            { pergunta: "V/F: O erro mais comum ao usar um preservativo masculino é não retirar o ar da ponta antes de desenrolar.", resposta_correta: "V", explicacao: "Verdadeiro. Não retirar o ar pode criar uma bolha que faz o preservativo estourar. Aperte a ponta (reservatório) antes de desenrolar." },
-            { pergunta: "V/F: É seguro guardar um preservativo na carteira ou porta-luvas por muito tempo, pois o calor e atrito não o afetam.", resposta_correta: "F", explicacao: "Falso. O calor e a fricção podem danificar o látex. Guarde-o num local fresco, seco e protegido (como um bolso da mochila) e verifique sempre o prazo de validade." },
-            { pergunta: "V/F: O anel externo do preservativo feminino é inserido profundamente na vagina/ânus.", resposta_correta: "F", explicacao: "Falso. O anel externo serve para manter o preservativo feminino no lugar FORA da vagina (ou ânus), cobrindo a vulva/área externa. É também usado para guiar a inserção e a remoção." },
-            { pergunta: "V/F: Apenas a camisinha masculina é considerada um método contraceptivo de barreira.", resposta_correta: "F", explicacao: "Falso. O preservativo feminino e o diafragma (que precisa ser usado com espermicida) são exemplos de métodos de barreira." },
-            // { pergunta: "V/F: A pílula do dia seguinte pode ser usada como método contraceptivo regular.", resposta_correta: "F", explicacao: "Falso..." } // Já está nas de Risco
-            { pergunta: "V/F: O preservativo protege 100% contra todas as ISTs, incluindo HPV e Herpes.", resposta_correta: "F", explicacao: "Falso. Ele protege as áreas que cobre, mas IST como o HPV e o Herpes Genital podem ser transmitidas pelo contato com áreas da pele infectadas que não estão cobertas." },
-            { pergunta: "V/F: O duche vaginal após a relação previne gravidez e IST.", resposta_correta: "F", explicacao: "Mito. O duche pode na verdade empurrar bactérias e vírus para dentro do colo do útero e desequilibra a flora vaginal, aumentando o risco de infecções." },
-            { pergunta: "V/F: A pílula anticoncepcional oferece proteção contra gravidez e ISTs.", resposta_correta: "F", explicacao: "Falso. Apenas o preservativo (masculino ou feminino) oferece dupla proteção: contra a gravidez e contra a maioria das IST." },
-            { pergunta: "V/F: Consentimento dado uma vez vale para toda a relação sexual, sem precisar ser reconfirmado.", resposta_correta: "F", explicacao: "Falso. Consentimento Contínuo significa que ele deve ser dado e confirmado em cada etapa, podendo ser retirado a qualquer momento. É crucial porque o consentimento anterior não garante o atual." },
-            { pergunta: "V/F: Orientação Sexual e Identidade de Gênero são a mesma coisa.", resposta_correta: "F", explicacao: "Falso. Orientação Sexual é a atração por outras pessoas. Identidade de Gênero é o sentido interno de ser homem, mulher, ambos, nenhum, ou outro gênero." },
-            // { pergunta: "V/F: Se não há sintomas visíveis, a pessoa definitivamente não tem uma IST.", resposta_correta: "F", explicacao: "Falso..." } // Similar à de Risco
-            { pergunta: "V/F: Abrir a embalagem do preservativo com os dentes é seguro se feito rapidamente.", resposta_correta: "F", explicacao: "Falso. Rasgar com dentes ou unhas pode criar um microfuro invisível que anula a proteção. Use os dedos na borda serrilhada." },
-            { pergunta: "V/F: Se colocar o preservativo do lado errado, basta virá-lo e continuar usando.", resposta_correta: "F", explicacao: "Falso. Se começou a desenrolar do lado errado e tocou no pênis, jogue fora e pegue outra! Fluidos pré-ejaculatórios podem ter contaminado a parte interna." },
-            { pergunta: "V/F: Não é necessário apertar a ponta do preservativo antes de desenrolar, o ar não interfere.", resposta_correta: "F", explicacao: "Falso. Aquela pontinha é o reservatório. Se não apertar para tirar o ar, na hora da ejaculação, a pressão pode fazer o preservativo estourar." },
-            { pergunta: "V/F: Não é preciso desenrolar o preservativo completamente até a base do pênis.", resposta_correta: "F", explicacao: "Falso. Sim, totalmente! A camisinha só protege se cobrir o pênis por inteiro, da cabeça até a base." },
-            { pergunta: "V/F: Para retirar o preservativo masculino, espere o pênis ficar mole e puxe-o.", resposta_correta: "F", explicacao: "Falso. Retire logo após a ejaculação, antes que o pênis amoleça, segurando a borda na base para não vazar." },
-            { pergunta: "V/F: O preservativo feminino só pode ser colocado imediatamente antes da relação.", resposta_correta: "F", explicacao: "Falso. Uma das vantagens é que pode ser colocado horas antes, garantindo que a prevenção já está pronta." },
-            { pergunta: "V/F: O anel menor (interno) do preservativo feminino deve ficar próximo à entrada da vagina.", resposta_correta: "F", explicacao: "Falso. O anel menor é quem prende a camisinha lá dentro e deve ser empurrado o mais fundo possível." },
-            { pergunta: "V/F: O anel externo do preservativo feminino não ajuda a guiar o pênis durante a penetração.", resposta_correta: "F", explicacao: "Falso. O anel externo (maior) fica para fora e funciona como um 'guia' para o pênis entrar dentro da camisinha." },
-            // { pergunta: "V/F: Usar preservativo feminino e masculino ao mesmo tempo aumenta a proteção.", resposta_correta: "F", explicacao: "Falso!..." } // Já está nas de Risco
-            { pergunta: "V/F: Para remover o preservativo feminino, basta puxá-lo diretamente sem torcer o anel externo.", resposta_correta: "F", explicacao: "Falso. Você deve torcer o anel externo antes de puxar para 'fechar' a bolsa e prender o sêmen lá dentro." },
-            { pergunta: "V/F: Comunicação clara sobre consentimento não é essencial para uma relação sexual saudável.", resposta_correta: "F", explicacao: "Falso. A comunicação aberta e o consentimento são a base de qualquer relação sexual saudável e respeitosa." },
-            { pergunta: "V/F: Libido e desejo sexual significam exatamente a mesma coisa.", resposta_correta: "F", explicacao: "Falso. Libido é o impulso sexual geral ('motor'), enquanto o desejo é a vontade específica de ter atividade sexual ('vontade de dirigir')." },
-            { pergunta: "V/F: Compartilhar conteúdo íntimo (sexting) não apresenta riscos se houver confiança.", resposta_correta: "F", explicacao: "Falso. Os riscos de exposição e distribuição não consensual (pornografia de vingança) existem e podem ter graves consequências." },
-            { pergunta: "V/F: Explorar fora da zona de conforto sexual não exige comunicação ou consentimento prévio.", resposta_correta: "F", explicacao: "Falso. Explorar fora dessa zona com um parceiro requer comunicação, confiança e consentimento mútuo." }
+            {
+                pergunta: "V/F: O erro mais comum ao usar um preservativo é não apertar a ponta para retirar o ar antes de o desenrolar.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Não retirar o ar pode criar uma bolha que faz o preservativo estourar. Aperte a ponta (reservatório) antes de desenrolar."
+            },
+            {
+                pergunta: "V/F: É seguro guardar um preservativo na carteira ou no porta-luvas do carro por longos períodos.",
+                resposta_correta: "F",
+                explicacao: "Falso. O calor e a fricção podem danificar o látex. Guarde-o num local fresco, seco e verifique sempre a validade."
+            },
+            {
+                pergunta: "V/F: O anel externo do preservativo feminino é inserido profundamente na vagina, enquanto o anel interno fica para fora.",
+                resposta_correta: "F",
+                explicacao: "Falso. É o oposto: o anel interno (menor) é inserido, e o anel externo (maior) fica fora da vagina, cobrindo a vulva."
+            },
+            {
+                pergunta: "V/F: O preservativo feminino e o diafragma também são considerados métodos contraceptivos de barreira.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Ambos criam uma barreira física que impede os espermatozoides de chegarem ao óvulo."
+            },
+            {
+                pergunta: "V/F: A 'pílula do dia seguinte' é um método contraceptivo de emergência e não deve ser usada como método regular.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. É apenas para emergências, pois a dose hormonal é alta e é menos eficaz que métodos regulares."
+            },
+            {
+                pergunta: "V/F: O preservativo oferece 100% de proteção contra todas as IST, incluindo HPV e Herpes Genital.",
+                resposta_correta: "F",
+                explicacao: "Falso. Ele protege as áreas que cobre, mas IST como HPV e Herpes podem ser transmitidas por contato pele a pele em áreas não cobertas."
+            },
+            {
+                pergunta: "V/F: O duche vaginal (lavagem interna) após a relação sexual é um método eficaz para prevenir gravidez e IST.",
+                resposta_correta: "F",
+                explicacao: "Mito. O duche vaginal não previne gravidez e pode, na verdade, aumentar o risco de infecções ao desequilibrar a flora vaginal."
+            },
+            {
+                pergunta: "V/F: O preservativo (masculino ou feminino) é o único método que protege simultaneamente contra a gravidez e a maioria das IST.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. É o único método que oferece essa dupla proteção."
+            },
+            {
+                pergunta: "V/F: 'Consentimento Contínuo' significa que, se uma pessoa disse 'sim' uma vez, o consentimento vale para todas as etapas seguintes.",
+                resposta_correta: "F",
+                explicacao: "Falso. Consentimento contínuo significa que ele deve ser confirmado em cada etapa e pode ser retirado a qualquer momento."
+            },
+            {
+                pergunta: "V/F: Orientação Sexual (por quem você se atrai) é a mesma coisa que Identidade de Gênero (como você se identifica).",
+                resposta_correta: "F",
+                explicacao: "Falso. Orientação é sobre atração (ex: hétero, gay, bi); Identidade de Gênero é o sentido interno de ser (ex: homem, mulher, não-binário)."
+            },
+            {
+                pergunta: "V/F: Se uma pessoa não tem sintomas visíveis de IST, é garantido que ela não está infectada.",
+                resposta_correta: "F",
+                explicacao: "Falso. Muitas IST, como Clamídia e HPV, podem ser assintomáticas. Testes regulares são essenciais."
+            },
+            {
+                pergunta: "V/F: Abrir a embalagem do preservativo com os dentes ou unhas é seguro se for feito com cuidado.",
+                resposta_correta: "F",
+                explicacao: "Falso. Isso pode criar microfuros invisíveis que anulam a proteção. Sempre use os dedos na borda serrilhada."
+            },
+            {
+                pergunta: "V/F: Se você tentar colocar o preservativo do lado errado, pode simplesmente virá-lo e usá-lo normalmente.",
+                resposta_correta: "F",
+                explicacao: "Falso. Se a ponta tocou o pênis, fluidos pré-ejaculatórios podem ter contaminado a parte externa. Jogue fora e pegue um novo."
+            },
+            {
+                pergunta: "V/F: Não é necessário apertar a ponta (reservatório) do preservativo para tirar o ar antes de usar.",
+                resposta_correta: "F",
+                explicacao: "Falso. É crucial apertar para tirar o ar. Se o ar ficar preso, a pressão na ejaculação pode fazer o preservativo estourar."
+            },
+            {
+                pergunta: "V/F: O preservativo deve ser desenrolado completamente até a base do pênis para garantir a proteção.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. A camisinha só protege se cobrir o pênis por inteiro, da cabeça até a base."
+            },
+            {
+                pergunta: "V/F: Ao retirar o pênis, você deve segurar a borda da camisinha na base para evitar que ela deslize e vaze.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Segure a borda na base while retira o pênis (logo após a ejaculação) para garantir que o conteúdo fique preso."
+            },
+            {
+                pergunta: "V/F: Uma vantagem do preservativo feminino é que ele pode ser colocado horas antes da relação sexual.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Diferente do masculino, o preservativo feminino não depende de uma ereção e pode ser inserido com antecedência."
+            },
+            {
+                pergunta: "V/F: No preservativo feminino, o anel menor (interno) deve ser empurrado o mais fundo possível, como um absorvente interno.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. O anel menor (interno) serve para prender a camisinha no fundo da vagina."
+            },
+            {
+                pergunta: "V/F: O anel externo (maior) do preservativo feminino deve ser empurrado para dentro da vagina junto com o pênis.",
+                resposta_correta: "F",
+                explicacao: "Falso. O anel externo deve permanecer *fora* da vagina, cobrindo a entrada. Ele funciona como um guia para o pênis."
+            },
+            {
+                pergunta: "V/F: É recomendado usar um preservativo feminino e um masculino ao mesmo tempo para 'dupla proteção'.",
+                resposta_correta: "F",
+                explicacao: "Falso! NUNCA faça isso. O atrito entre os dois materiais pode rasgar *ambos* os preservativos, anulando a proteção."
+            },
+            {
+                pergunta: "V/F: Para remover o preservativo feminino, basta puxá-lo diretamente para fora.",
+                resposta_correta: "F",
+                explicacao: "Falso. Para evitar vazamentos, você deve primeiro torcer o anel externo (que está fora) para 'fechar' a bolsa e prender o sêmen."
+            },
+            {
+                pergunta: "V/F: O consentimento é a base de uma relação saudável e deve ser claro, entusiástico e pode ser retirado a qualquer momento.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Comunicação e consentimento são essenciais para garantir que todos os parceiros se sintam seguros e respeitados."
+            },
+            {
+                pergunta: "V/F: 'Libido' (impulso sexual geral) e 'desejo sexual' (vontade específica de ter atividade) são exatamente a mesma coisa.",
+                resposta_correta: "F",
+                explicacao: "Falso. Embora relacionados, libido é o impulso ou 'motor' geral, enquanto o desejo é a vontade específica de agir."
+            },
+            {
+                pergunta: "V/F: 'Sexting' (enviar conteúdo sexual) é totalmente seguro, e não há riscos se for feito entre duas pessoas que confiam uma na outra.",
+                resposta_correta: "F",
+                explicacao: "Falso. O risco de exposição e distribuição não consensual (pornografia de vingança) existe, mesmo havendo confiança inicial."
+            },
+            {
+                pergunta: "V/F: A 'Zona de Conforto' na sexualidade refere-se às práticas com as quais uma pessoa se sente segura e à vontade.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Explorar fora dessa zona requer confiança, comunicação clara e consentimento mútuo."
+            }
         ];
 
+        // Array para as casas de RISCO (V/F)
         const perguntasRisco = [
-            { pergunta: "Verdade ou Mito: Esquecer a pílula anticoncepcional num dia, mas tomá-la no dia seguinte, anula completamente o risco de gravidez.", resposta_correta: "F", explicacao: "Falso. A eficácia da pílula depende da tomada correta e diária. Se você falhar um dia, a proteção pode ser reduzida, e métodos de proteção adicionais (como o preservativo) devem ser usados." },
-            { pergunta: "É seguro usar dois preservativos ao mesmo tempo para maior proteção.", resposta_correta: "F", explicacao: "Falso. Usar dois preservativos aumenta o atrito entre eles, fazendo com que ambos se rasguem mais facilmente. Use sempre apenas um." },
-            { pergunta: "A pílula do dia seguinte pode ser usada como método contraceptivo regular.", resposta_correta: "F", explicacao: "Falso. A pílula do dia seguinte é apenas para emergências. Usar regularmente pode causar desequilíbrios hormonais e é menos eficaz." },
-            { pergunta: "É possível engravidar mesmo usando preservativo corretamente.", resposta_correta: "V", explicacao: "Verdadeiro. Nenhum método é 100% eficaz. O preservativo tem cerca de 98% de eficácia quando usado corretamente, mas ainda existe uma pequena chance de falha." },
-            { pergunta: "Toda IST apresenta sintomas visíveis.", resposta_correta: "F", explicacao: "Falso. Muita IST (como Clamídia, HPV e HIV) pode ser assintomática por longos períodos. Por isso é importante fazer testes regulares." },
-            { pergunta: "O preservativo protege contra toda IST.", resposta_correta: "F", explicacao: "Falso. O preservativo protege contra a maioria, mas algumas como HPV e Herpes podem ser transmitidas pelo contato com áreas da pele não cobertas." },
-            { pergunta: "Lubrificantes à base de óleo são seguros para usar com preservativos de látex.", resposta_correta: "F", explicacao: "Falso. Lubrificantes à base de óleo (como vaselina) podem danificar o látex, fazendo o preservativo rasgar. Use sempre lubrificantes à base de água ou silicone." },
-            { pergunta: "É possível engravidar tendo relação sexual durante a menstruação.", resposta_correta: "V", explicacao: "Verdadeiro. Embora a probabilidade seja menor, espermatozoides podem sobreviver por vários dias, e a ovulação pode ocorrer mais cedo em alguns ciclos." },
-            { pergunta: "IST é um problema de saúde apenas para pessoas sexualmente ativas com múltiplos parceiros.", resposta_correta: "F", explicacao: "Falso. Qualquer pessoa sexualmente ativa pode contrair uma IST, independentemente do número de parceiros. O risco está na prática desprotegida." },
-            { pergunta: "O sexo anal é uma prática de baixo risco para a transmissão de IST em comparação com o sexo vaginal.", resposta_correta: "F", explicacao: "Falso. O sexo anal é, na verdade, uma prática de alto risco para a transmissão de IST (incluindo o HIV) devido à maior fragilidade do tecido anal." }
+            {
+                pergunta: "Verdade ou Mito: Esquecer a pílula anticoncepcional num dia, mas tomá-la no dia seguinte, anula completely o risco de gravidez.",
+                resposta_correta: "F",
+                explicacao: "Falso. A eficácia da pílula depende da tomada correta e diária. Se você falhar um dia, a proteção pode ser reduzida, e métodos de proteção adicionais (como o preservativo) devem ser usados."
+            },
+            {
+                pergunta: "É seguro usar dois preservativos ao mesmo tempo para maior proteção.",
+                resposta_correta: "F",
+                explicacao: "Falso. Usar dois preservativos aumenta o atrito entre eles, fazendo com que ambos se rasguem mais facilmente. Use sempre apenas um."
+            },
+            {
+                pergunta: "A pílula do dia seguinte pode ser usada como método contraceptivo regular.",
+                resposta_correta: "F",
+                explicacao: "Falso. A pílula do dia seguinte é apenas para emergências. Usar regularmente pode causar desequilíbrios hormonais e é menos eficaz."
+            },
+            {
+                pergunta: "É possível engravidar mesmo usando preservativo corretamente.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Nenhum método é 100% eficaz. O preservativo tem cerca de 98% de eficácia quando usado corretamente, mas ainda existe uma pequena chance de falha."
+            },
+            {
+                pergunta: "Toda IST apresenta sintomas visíveis.",
+                resposta_correta: "F",
+                explicacao: "Falso. Muita IST (como Clamídia, HPV e HIV) pode ser assintomática por longos períodos. Por isso é importante fazer testes regulares."
+            },
+            {
+                pergunta: "O preservativo protege contra toda IST.",
+                resposta_correta: "F",
+                explicacao: "Falso. O preservativo protege contra a maioria, mas algumas como HPV e Herpes podem ser transmitidas pelo contato com áreas da pele não cobertas."
+            },
+            {
+                pergunta: "Lubrificantes à base de óleo são seguros para usar com preservativos de látex.",
+                resposta_correta: "F",
+                explicacao: "Falso. Lubrificantes à base de óleo (como vaselina) podem danificar o látex, fazendo o preservativo rasgar. Use sempre lubrificantes à base de água ou silicone."
+            },
+            {
+                pergunta: "É possível engravidar tendo relação sexual durante a menstruação.",
+                resposta_correta: "V",
+                explicacao: "Verdadeiro. Embora a probabilidade seja menor, espermatozoides podem sobreviver por vários dias, e a ovulação pode ocorrer mais cedo em alguns ciclos."
+            },
+            {
+                pergunta: "IST é um problema de saúde apenas para pessoas sexualmente ativas com múltiplos parceiros.",
+                resposta_correta: "F",
+                explicacao: "Falso. Qualquer pessoa sexualmente ativa pode contrair uma IST, independentemente do número de parceiros. O risco está na prática desprotegida."
+            },
+            {
+                pergunta: "O sexo anal é uma prática de baixo risco para a transmissão de IST em comparação com o sexo vaginal.",
+                resposta_correta: "F",
+                explicacao: "Falso. O sexo anal é, na verdade, uma prática de alto risco para a transmissão de IST (incluindo o HIV) devido à maior fragilidade do tecido anal."
+            }
         ];
     </script>
-
     <script>
-        // Elementos, Mapeamento Imagens, Estado Jogo, Config (mantidos)
-        const bgm = document.getElementById('bgm'); const introVideo = document.getElementById('introVideo'); const audioDice = document.getElementById('audioDice'); const audioCoin = document.getElementById('audioCoin'); const audioError = document.getElementById('audioError'); const audioWin = document.getElementById('audioWin');
-        const imgPath = 'assets/img/'; const imgCasaNormal = imgPath + '20251020_222254_0002.jpg'; const imgCasaRisco = imgPath + '20251020_222254_0001.jpg'; const imgReacaoAcerto = imgPath + '20251020_222254_0003.jpg'; const imgReacaoErro = imgPath + '20251020_222253_0000.jpg';
-        let gameState = { currentPlayer: 1, players: { 1: { position: 1, coins: 0, bombs: 0 }, 2: { position: 1, coins: 0, bombs: 0 } }, gameEnded: false, musicPlaying: false };
-        let currentQuestion = null; let currentQuestionType = null;
-        const defaultConfig = { game_title: "Tabuleiro Imersivo", player1_name: "J1", player2_name: "J2", instructions_text: "Clique na roleta!" };
-        let isSpinning = false;
+        // Elementos de áudio e vídeo
+        const bgm = document.getElementById('bgm');
+        const introVideo = document.getElementById('introVideo');
+        const audioDice = document.getElementById('audioDice');
+        const audioCoin = document.getElementById('audioCoin');
+        const audioError = document.getElementById('audioError');
+        const audioWin = document.getElementById('audioWin');
 
-        // --- Funções Auxiliares (Áudio, Efeitos, Modais) ---
-        function playSound(audioElement) { if (audioElement) { audioElement.currentTime = 0; audioElement.play().catch(e => console.warn("Erro ao tocar áudio:", e)); } }
-        function toggleMusic() { const button = document.getElementById('musicButton'); gameState.musicPlaying = !gameState.musicPlaying; if (gameState.musicPlaying) { button.textContent = '🎵 Música Ligada'; button.classList.add('playing'); bgm?.play().catch(e => console.warn("Erro BGM:", e)); } else { button.textContent = '🎶 Ligar Música'; button.classList.remove('playing'); bgm?.pause(); } }
-        function closeVideoModal() { const videoModal = document.getElementById('videoModal'); console.log("Tentando fechar vídeo..."); if(videoModal) { videoModal.style.display = 'none'; console.log("Modal display: none"); } else { console.error("videoModal não encontrado!"); } if(introVideo) { introVideo.pause(); introVideo.currentTime = 0; } if (!gameState.musicPlaying && bgm) { try { toggleMusic(); } catch(e){ console.warn("Erro ao iniciar BGM:", e)} } } // Tratamento de erro para BGM
-        function createSoundWaves(element, color, count = 1) { const container = document.getElementById('soundWaves'); if (!container || !element) return; const rect = element.getBoundingClientRect(); const centerX = rect.left + rect.width / 2; const centerY = rect.top + rect.height / 2; for (let i = 0; i < count; i++) { const wave = document.createElement('div'); wave.className = 'sound-wave'; wave.style.borderColor = color; wave.style.left = (centerX - 10) + 'px'; wave.style.top = (centerY - 10) + 'px'; wave.style.animationDelay = (i * 0.3) + 's'; container.appendChild(wave); setTimeout(() => { if (container.contains(wave)) { container.removeChild(wave); } }, 1500 + (i * 300)); } }
-        function createDiceVisualEffect() { playSound(audioDice); const effect = document.createElement('div'); effect.className = 'dice-visual-effect'; effect.textContent = '🎲'; document.body.appendChild(effect); setTimeout(() => { if (document.body.contains(effect)) { document.body.removeChild(effect); } }, 1000); }
-        function createMoveTrail(fromElement, toElement) { if (!fromElement || !toElement) return; const fromRect = fromElement.getBoundingClientRect(); const toRect = toElement.getBoundingClientRect(); const steps = 8; const boardContainer = document.querySelector('.board-container'); if (!boardContainer) return; const containerRect = boardContainer.getBoundingClientRect(); const offsetX = containerRect.left; const offsetY = containerRect.top; // Calcula offset do container
-            // Adiciona scroll atual da página para compensar
-            const scrollX = window.scrollX || window.pageXOffset;
-            const scrollY = window.scrollY || window.pageYOffset;
+        // ================================================================
+        // ALTERAÇÃO 1: Corrigido .png.jpg para .jpg
+        // Se suas imagens forem .png, mude aqui.
+        // ================================================================
+        const characterImages = {
+            'boy_q': 'assets/img/20251020_222253_0000.jpg', 
+            'boy_a': 'assets/img/20251020_222254_0003.jpg', 
+            'boy_e': 'assets/img/20251020_222253_0000.jpg',
 
-            for (let i = 0; i < steps; i++) { setTimeout(() => { const trail = document.createElement('div'); trail.className = 'move-trail'; const progress = i / (steps - 1);
-            // Ajusta cálculo de X e Y para incluir scroll e offset do container
-            const x = (fromRect.left + scrollX - offsetX) + (toRect.left - fromRect.left) * progress + (fromRect.width / 2) - 4; // -4 para centralizar o trail de 8px
-            const y = (fromRect.top + scrollY - offsetY) + (toRect.top - fromRect.top) * progress + (fromRect.height / 2) - 4; // -4 para centralizar o trail de 8px
-             trail.style.left = x + 'px'; trail.style.top = y + 'px'; boardContainer.appendChild(trail); setTimeout(() => { if (trail.parentNode) { trail.parentNode.removeChild(trail); } }, 1000); }, i * 80); } } // Diminuído tempo entre rastros
-        function createCoinVisualEffect() { playSound(audioCoin); const effect = document.createElement('div'); effect.className = 'coin-visual-effect'; effect.textContent = '🪙'; document.body.appendChild(effect); setTimeout(() => { if (document.body.contains(effect)) { document.body.removeChild(effect); } }, 2000); }
-        function createErrorVisualEffect() { playSound(audioError); const effect = document.createElement('div'); effect.className = 'error-visual-effect'; effect.textContent = '💥'; document.body.appendChild(effect); setTimeout(() => { if (document.body.contains(effect)) { document.body.removeChild(effect); } }, 1500); }
-        function createVictoryVisualEffect() { playSound(audioWin); const effect = document.createElement('div'); effect.className = 'victory-visual-effect'; effect.textContent = '🏆'; document.body.appendChild(effect); setTimeout(() => { if (document.body.contains(effect)) { document.body.removeChild(effect); } }, 3000); }
-        function createExplosion() { const overlay = document.getElementById('explosionOverlay'); const particlesContainer = document.getElementById('explosionParticles'); if(!overlay || !particlesContainer) return; overlay.style.display = 'block'; overlay.style.animation = 'none'; overlay.offsetHeight; overlay.style.animation = 'explode 1.5s ease-out'; particlesContainer.innerHTML = ''; for (let i = 0; i < 30; i++) { const particle = document.createElement('div'); particle.className = 'particle'; const angle = Math.random() * 360; const distance = 100 + Math.random() * 200; const endX = Math.cos(angle * Math.PI / 180) * distance; const endY = Math.sin(angle * Math.PI / 180) * distance; particle.style.setProperty('--end-x', `${endX}px`); particle.style.setProperty('--end-y', `${endY}px`); particle.style.background = `hsl(${Math.random() * 60}, 100%, 50%)`; particlesContainer.appendChild(particle); setTimeout(() => { if (particlesContainer.contains(particle)) { particlesContainer.removeChild(particle); } }, 1500); } setTimeout(() => { overlay.style.display = 'none'; }, 1500); document.body.classList.add('screen-shake'); setTimeout(() => { document.body.classList.remove('screen-shake'); }, 800); }
-        function createStarsCelebration() { const container = document.getElementById('starsCelebration'); if(!container) return; container.innerHTML = ''; for (let i = 0; i < 20; i++) { const star = document.createElement('div'); star.className = 'dancing-star'; star.textContent = '⭐'; star.style.left = `${Math.random() * 100}%`; star.style.top = `${Math.random() * 100}%`; star.style.animationDelay = `${Math.random() * 1}s`; container.appendChild(star); setTimeout(() => { if (container.contains(star)) { container.removeChild(star); } }, 2500); } }
-        function showCustomModal(title, message, buttons) { document.getElementById('answerTitle').textContent = title; document.getElementById('answerText').textContent = message; const btnContainer = document.querySelector('#answerModal .modal-buttons'); btnContainer.innerHTML = ''; buttons.forEach(button => { const btn = document.createElement('button'); btn.className = 'btn btn-primary'; btn.textContent = button.text; btn.onclick = button.action; btnContainer.appendChild(btn); }); document.getElementById('answerModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('questionModal').style.display = 'none'; document.getElementById('answerModal').style.display = 'none'; const activeCard = document.querySelector('.character-card.show'); if(activeCard) activeCard.classList.remove('show'); let errorPenaltyReturn = document.getElementById('answerTitle')?.textContent.includes('RISCO') && document.getElementById('answerText')?.innerHTML.includes('Volte para o início'); if (!gameState.gameEnded && !errorPenaltyReturn) { setTimeout(() => switchPlayer(), 300); } else if (!gameState.gameEnded && errorPenaltyReturn){ isSpinning = false; /* Libera roleta após voltar */ } else { isSpinning = false; /* Libera roleta no fim */ } }
+            'girl_q': 'assets/img/20251020_222254_0002.jpg', 
+            'girl_a': 'assets/img/20251020_222254_0003.jpg', 
+            'girl_e': 'assets/img/20251020_222253_0000.jpg',
+            'girl_d': 'assets/img/20251020_222254_0002.jpg'
+        };
+        
+        // Novo mapeamento simplificado para a casa:
+        const imagePergunta = characterImages.girl_q;
+        const imageAcerto = characterImages.girl_a;
+        const imageErro = characterImages.boy_q;
 
-        /* ==================================================================
-           initializeBoard - Quadrado com Imagem de Fundo
-           ================================================================== */
+
+        // Estado do jogo
+        let gameState = {
+            currentPlayer: 1,
+            players: {
+                1: { position: 1, coins: 0, bombs: 0 },
+                2: { position: 1, coins: 0, bombs: 0 }
+            },
+            gameEnded: false,
+            musicPlaying: false
+        };
+        let currentQuestion = null;
+        let currentQuestionType = null;
+
+        // Configuração padrão
+        const defaultConfig = {
+            game_title: "Tabuleiro Imersivo - Educação Sexual",
+            player1_name: "Jogador 1",
+            player2_name: "Jogador 2",
+            instructions_text: "Clique na roleta para jogar! Respostas certas ganham moedas, erradas ganham bombas!"
+        };
+
+        // Funções de Áudio
+        function playSound(audioElement) {
+            if (audioElement) {
+                audioElement.currentTime = 0; // Reinicia o áudio
+                audioElement.play().catch(e => console.error("Erro ao tentar tocar áudio:", e));
+            }
+        }
+
+        function toggleMusic() {
+            const button = document.getElementById('musicButton');
+            gameState.musicPlaying = !gameState.musicPlaying;
+
+            if (gameState.musicPlaying) {
+                button.textContent = '🎵 Música Ligada';
+                button.classList.add('playing');
+                bgm.play().catch(e => console.error("Erro ao tocar BGM:", e));
+                createSoundWaves(button, '#667eea', 3);
+            } else {
+                button.textContent = '🎶 Ligar Música';
+                button.classList.remove('playing');
+                bgm.pause();
+            }
+        }
+
+        // Fechar o modal de vídeo (inicia o jogo)
+        function closeVideoModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            introVideo.pause();
+            introVideo.currentTime = 0; // Reinicia o vídeo
+
+            // Inicia a música de fundo automaticamente, se não estiver tocando
+            if (!gameState.musicPlaying) {
+                 toggleMusic();
+            }
+        }
+
+        function createSoundWaves(element, color, count = 1) {
+             const container = document.getElementById('soundWaves');
+             const rect = element.getBoundingClientRect();
+             const centerX = rect.left + rect.width / 2;
+             const centerY = rect.top + rect.height / 2;
+
+             for (let i = 0; i < count; i++) {
+                 const wave = document.createElement('div');
+                 wave.className = 'sound-wave';
+                 wave.style.borderColor = color;
+                 wave.style.left = (centerX - 10) + 'px';
+                 wave.style.top = (centerY - 10) + 'px';
+                 wave.style.animationDelay = (i * 0.3) + 's';
+
+                 container.appendChild(wave);
+
+                 setTimeout(() => {
+                     if (container.contains(wave)) {
+                         container.removeChild(wave);
+                     }
+                 }, 1500 + (i * 300));
+             }
+        }
+
+        function createDiceVisualEffect() {
+            // Efeito de som do dado
+            playSound(audioDice);
+            const effect = document.createElement('div');
+            effect.className = 'dice-visual-effect';
+            effect.textContent = '🎲';
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                if (document.body.contains(effect)) {
+                    document.body.removeChild(effect);
+                }
+            }, 1000);
+        }
+
+        function createMoveTrail(fromElement, toElement) {
+               const fromRect = fromElement.getBoundingClientRect();
+               const toRect = toElement.getBoundingClientRect();
+
+               const steps = 8;
+               for (let i = 0; i < steps; i++) {
+                   setTimeout(() => {
+                       const trail = document.createElement('div');
+                       trail.className = 'move-trail';
+
+                       const progress = i / (steps - 1);
+                       const x = fromRect.left + (toRect.left - fromRect.left) * progress;
+                       const y = fromRect.top + (toRect.top - fromRect.top) * progress;
+
+                       trail.style.left = x + 'px';
+                       trail.style.top = y + 'px';
+
+                       document.body.appendChild(trail);
+
+                       setTimeout(() => {
+                           if (document.body.contains(trail)) {
+                               document.body.removeChild(trail);
+                           }
+                       }, 1000);
+                   }, i * 100);
+               }
+        }
+
+        function createCoinVisualEffect() {
+            // Efeito de som de moeda
+            playSound(audioCoin);
+            const effect = document.createElement('div');
+            effect.className = 'coin-visual-effect';
+            effect.textContent = '🪙';
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                if (document.body.contains(effect)) {
+                    document.body.removeChild(effect);
+                }
+            }, 2000);
+        }
+
+        function createErrorVisualEffect() {
+            // Efeito de som de erro/bomba
+            playSound(audioError);
+            const effect = document.createElement('div');
+            effect.className = 'error-visual-effect';
+            effect.textContent = '💥';
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                if (document.body.contains(effect)) {
+                    document.body.removeChild(effect);
+                }
+            }, 1500);
+        }
+
+        function createVictoryVisualEffect() {
+            // Efeito de som de vitória
+            playSound(audioWin);
+            const effect = document.createElement('div');
+            effect.className = 'victory-visual-effect';
+            effect.textContent = '🏆';
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                if (document.body.contains(effect)) {
+                    document.body.removeChild(effect);
+                }
+            }, 3000);
+        }
+        
+        // Funções de Efeito (Explosão, Estrelas) - Adicionadas do seu HTML
+        function createExplosion() {
+            const overlay = document.getElementById('explosionOverlay');
+            const particlesContainer = document.getElementById('explosionParticles');
+            
+            overlay.style.display = 'block';
+            overlay.style.animation = 'none';
+            overlay.offsetHeight; // Forçar reflow
+            overlay.style.animation = 'explode 1.5s ease-out';
+
+            particlesContainer.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const angle = Math.random() * 360;
+                const distance = 100 + Math.random() * 200;
+                const endX = Math.cos(angle * Math.PI / 180) * distance;
+                const endY = Math.sin(angle * Math.PI / 180) * distance;
+
+                particle.style.setProperty('--end-x', `${endX}px`);
+                particle.style.setProperty('--end-y', `${endY}px`);
+                particle.style.background = `hsl(${Math.random() * 60}, 100%, 50%)`;
+                particlesContainer.appendChild(particle);
+
+                setTimeout(() => {
+                    if (particlesContainer.contains(particle)) {
+                        particlesContainer.removeChild(particle);
+                    }
+                }, 1500);
+            }
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 1500);
+
+            // Screen shake
+            document.body.classList.add('screen-shake');
+            setTimeout(() => {
+                document.body.classList.remove('screen-shake');
+            }, 800);
+        }
+
+        function createStarsCelebration() {
+            const container = document.getElementById('starsCelebration');
+            container.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const star = document.createElement('div');
+                star.className = 'dancing-star';
+                star.textContent = '⭐';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 1}s`;
+                container.appendChild(star);
+
+                setTimeout(() => {
+                    if (container.contains(star)) {
+                        container.removeChild(star);
+                    }
+                }, 2500);
+            }
+        }
+
+
+        // Inicializar o tabuleiro
         function initializeBoard() {
             const board = document.getElementById('gameBoard');
-            const container = document.querySelector('.board-container');
-            if (!board || !container) { console.error("Board or container not found!"); return; }
             board.innerHTML = '';
 
-            const numSquares = 40;
-            const containerSize = Math.min(container.offsetWidth, container.offsetHeight); // Usa tamanho real
-            const centerX = containerSize / 2;
-            const centerY = containerSize / 2;
-            const radius = containerSize * 0.40; // Ajustado para não sobrepor roleta
-            let baseSquareWidth = 80;
-            let baseSquareHeight = 100;
-             // Ajuste tamanho para telas menores se necessário (opcional)
-             if (containerSize < 550) { // Ex: se container for menor que 550px
-                 baseSquareWidth = containerSize * 0.11; // 11%
-                 baseSquareHeight = baseSquareWidth * 1.25; // Mantém proporção
-             }
+            const radius = 250; // Raio do círculo
+            const centerX = 300; // Centro X do tabuleiro
+            const centerY = 300; // Centro Y do tabuleiro
 
-
-            for (let i = 1; i <= numSquares; i++) {
+            for (let i = 1; i <= 40; i++) {
                 const square = document.createElement('div');
                 square.className = 'square';
                 square.id = `square-${i}`;
 
-                const angle = ((i - 1) / numSquares) * 2 * Math.PI - Math.PI / 2;
+                // Calcular posição em círculo
+                const angle = ((i - 1) / 40) * 2 * Math.PI - Math.PI / 2; // Começar no topo
                 const x = centerX + radius * Math.cos(angle);
                 const y = centerY + radius * Math.sin(angle);
 
-                let currentWidth = baseSquareWidth;
-                let currentHeight = baseSquareHeight;
-                let charImageURL = null;
-                let charLabel = i;
-                let charEmoji = null;
-                let needsCharacterElement = false;
+                square.style.left = `${x - 40}px`; // Ajustar para nova largura
+                square.style.top = `${y - 50}px`; // Ajustar para nova altura
+                square.style.animationDelay = `${i * 0.1}s`; // Delay escalonado para animação
 
+                // 🌟 LÓGICA DE CRIAÇÃO DO ÍCONE/IMAGEM (CORRIGIDA E SIMPLIFICADA) 🌟
+                let charImage = '';
+                let charLabel = i;
+                let charEmoji = ''; 
+                
                 if (i === 1) {
                     square.classList.add('start');
-                    charEmoji = '🚀'; charLabel = 'INÍCIO'; needsCharacterElement = true;
-                    currentWidth = baseSquareWidth * 1.1; currentHeight = baseSquareHeight * 1.1; // Maior
+                    charEmoji = '🚀';
+                    charLabel = 'INÍCIO';
                 } else if (i === 40) {
                     square.classList.add('finish');
-                    charEmoji = '🏆'; charLabel = 'FIM'; needsCharacterElement = true;
-                    currentWidth = baseSquareWidth * 1.1; currentHeight = baseSquareHeight * 1.1; // Maior
-                } else if (i % 5 === 0 || i % 7 === 0) {
+                    charEmoji = '🏆';
+                    charLabel = 'FIM';
+                } else if (i % 5 === 0 || i % 7 === 0) { // Define casas de Risco
                     square.classList.add('vf');
-                    charImageURL = imgCasaRisco; charLabel = 'RISCO';
+                    // Casas de V/F usam a imagem padrão (Garota Ideia)
+                    charImage = imagePergunta;
+                    charLabel = 'RISCO V/F'; // Alterado para clareza
                 } else {
                     square.classList.add('normal');
-                    charImageURL = imgCasaNormal; charLabel = i;
+                    // Casas normais usam a imagem padrão (Garota Ideia)
+                    charImage = imagePergunta;
+                    charLabel = i;
                 }
+                
+                const character = document.createElement('div');
+                character.className = 'square-character';
 
-                // Define tamanho e posição
-                square.style.width = `${currentWidth}px`;
-                square.style.height = `${currentHeight}px`;
-                square.style.left = `${x - (currentWidth / 2)}px`;
-                square.style.top = `${y - (currentHeight / 2)}px`;
-                square.style.animationDelay = `${i * 0.05}s`;
-
-                // Aplica imagem de fundo
-                if(charImageURL) {
-                    square.style.backgroundImage = `url('${charImageURL}')`;
-                }
-
-                // Cria elemento interno para emoji (Start/Finish)
-                if(needsCharacterElement) {
-                    const character = document.createElement('div');
-                    character.className = 'square-character';
+                if (charImage) {
+                    // Se houver imagem (casas normais ou V/F), usa a imagem como background
+                    character.style.backgroundImage = `url(${charImage})`;
+                    character.textContent = ''; // Garante que não há emoji de fallback
+                } else {
+                    // Se não houver imagem (Início/Fim), usa o emoji
                     character.textContent = charEmoji;
-                    square.appendChild(character);
                 }
 
-                // Adiciona o rótulo
                 const label = document.createElement('div');
                 label.className = 'square-number';
                 label.textContent = charLabel;
+                square.appendChild(character);
                 square.appendChild(label);
+                // 🌟 FIM DA LÓGICA DE CRIAÇÃO DO ÍCONE/IMAGEM 🌟
 
-                // Card pop-up
-                if (i !== 1 && i !== 40 && charImageURL) {
-                    const characterCard = document.createElement('div'); characterCard.className = 'character-card'; characterCard.id = `character-${i}`;
-                    const avatar = document.createElement('div'); avatar.className = 'character-avatar has-image';
-                    avatar.style.backgroundImage = `url(${charImageURL})`;
-                    const message = document.createElement('div'); message.className = 'character-message'; message.textContent = '...';
-                    characterCard.appendChild(avatar); characterCard.appendChild(message); square.appendChild(characterCard);
+
+                // Adicionar card de reação para casas com perguntas
+                if (i !== 1 && i !== 40) {
+                    const characterCard = document.createElement('div');
+                    characterCard.className = 'character-card';
+                    characterCard.id = `character-${i}`;
+
+                    const avatar = document.createElement('div');
+                    avatar.className = 'character-avatar';
+
+                    // O avatar inicial usa a imagem padrão
+                    avatar.style.backgroundImage = `url(${imagePergunta})`;
+                    avatar.classList.add('has-image');
+                    avatar.textContent = '';
+
+                    const message = document.createElement('div');
+                    message.className = 'character-message';
+                    message.textContent = 'Boa sorte!';
+
+                    characterCard.appendChild(avatar);
+                    characterCard.appendChild(message);
+                    square.appendChild(characterCard);
                 }
 
-                // Jogadores Iniciais
+                // Adicionar jogadores nas posições iniciais
                 if (i === 1) {
-                    const p1 = document.createElement('div'); p1.className = 'player player1'; p1.textContent = '1'; square.appendChild(p1);
-                    const p2 = document.createElement('div'); p2.className = 'player player2'; p2.textContent = '2'; square.appendChild(p2);
+                    const player1 = document.createElement('div');
+                    player1.className = 'player player1';
+                    player1.textContent = '1';
+                    square.appendChild(player1);
+
+                    const player2 = document.createElement('div');
+                    player2.className = 'player player2';
+                    player2.textContent = '2';
+                    square.appendChild(player2);
                 }
+
                 board.appendChild(square);
             }
         }
 
-
-        // --- Funções de Lógica do Jogo ---
         function spinRoulette() {
-            if (isSpinning || gameState.gameEnded) return;
-            isSpinning = true;
-            const rouletteElement = document.getElementById('roulette');
-            const resultElement = document.getElementById('rouletteResult');
+            if (gameState.gameEnded) return;
+
+            const roulette = document.getElementById('roulette');
+            const result = document.getElementById('rouletteResult');
+
+            // Efeito visual e sonoro de dado
             createDiceVisualEffect();
-            if(rouletteElement) rouletteElement.classList.add('spinning'); // Verifica se existe
-            if(resultElement) resultElement.textContent = '🎡';
+            createSoundWaves(roulette, '#ffd700', 2);
+
+            roulette.classList.add('spinning', 'roulette-glow');
+
             setTimeout(() => {
                 const roll = Math.floor(Math.random() * 6) + 1;
-                if(resultElement) resultElement.textContent = roll;
-                if(rouletteElement) rouletteElement.classList.remove('spinning');
-                setTimeout(() => movePlayer(roll), 300);
-            }, 2500);
+                result.textContent = roll;
+                roulette.classList.remove('spinning', 'roulette-glow');
+
+                movePlayer(roll);
+            }, 2000);
         }
 
+        //
+        // ================================================================
+        // FUNÇÃO movePlayer() COM A CORREÇÃO DO BUG E ALTERAÇÃO 2
+        // ================================================================
+        //
         function movePlayer(steps) {
-             if (gameState.gameEnded) { isSpinning = false; return; }
-             const player = gameState.players[gameState.currentPlayer];
-             const oldPosition = player.position;
-             const currentSquare = document.getElementById(`square-${oldPosition}`);
-             const playerElement = currentSquare?.querySelector(`.player.player${gameState.currentPlayer}`);
+            const player = gameState.players[gameState.currentPlayer];
+            const oldPosition = player.position;
 
-             player.position = Math.min(oldPosition + steps, 40);
-             const newSquare = document.getElementById(`square-${player.position}`);
-             updatePlayerDisplay(); // Atualiza número ANTES
+            // Remover jogador da posição atual
+            const currentSquare = document.getElementById(`square-${oldPosition}`);
+            const playerElement = currentSquare.querySelector(`.player.player${gameState.currentPlayer}`);
 
-             if (playerElement && currentSquare && newSquare) {
-                 createMoveTrail(currentSquare, newSquare); // Inicia rastro
-                 if (playerElement.parentNode) playerElement.remove(); // Remove imediatamente
-                 setTimeout(() => { // Adiciona após rastro
-                     const newPlayer = document.createElement('div');
-                     newPlayer.className = `player player${gameState.currentPlayer}`;
-                     newPlayer.textContent = gameState.currentPlayer;
-                     newPlayer.style.transform = 'scale(0)';
-                     newSquare.appendChild(newPlayer);
-                     newPlayer.offsetHeight;
-                     newPlayer.style.transform = 'scale(1)';
-                     newPlayer.style.transition = 'transform 0.3s ease-out';
-                     setTimeout(() => newPlayer.classList.add('player-move-glow'), 100);
-                     handleSquareAction(player.position); // Ação da casa
-                 }, 700);
-             } else { // Fallback
-                 if (playerElement?.parentNode) playerElement.remove();
-                 const newPlayer = document.createElement('div');
-                 newPlayer.className = `player player${gameState.currentPlayer} player-move-glow`;
-                 newPlayer.textContent = gameState.currentPlayer;
-                 newSquare?.appendChild(newPlayer);
-                 handleSquareAction(player.position);
-             }
-        }
+            // Calcular nova posição
+            player.position = Math.min(player.position + steps, 40);
+            const newSquare = document.getElementById(`square-${player.position}`);
 
-        function handleSquareAction(position) {
-            if (position === 40) {
+            // Criar rastro de movimento
+            if (playerElement) {
+                createMoveTrail(currentSquare, newSquare);
+                playerElement.remove();
+            }
+
+            // Adicionar jogador na nova posição com animação suave
+            const newPlayer = document.createElement('div');
+            newPlayer.className = `player player${gameState.currentPlayer} player-move-glow`;
+            newPlayer.textContent = gameState.currentPlayer;
+            newPlayer.style.transform = 'scale(0)';
+            newSquare.appendChild(newPlayer);
+
+            // Animar entrada do jogador
+            setTimeout(() => {
+                newPlayer.style.transform = 'scale(1)';
+                newPlayer.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            }, 100);
+
+            // Atualizar informações do jogador
+            updatePlayerDisplay();
+
+            // Verificar se chegou ao fim
+            if (player.position === 40) {
                 gameState.gameEnded = true;
-                const playerName = gameState.currentPlayer === 1 ? (document.getElementById('player1Name')?.textContent || 'J1') : (document.getElementById('player2Name')?.textContent || 'J2');
-                setTimeout(() => { createVictoryVisualEffect(); showWinner(playerName); }, 300);
-                isSpinning = false; return;
-            }
-            const square = document.getElementById(`square-${position}`);
-            if (!square) { console.error(`Casa ${position} não encontrada!`); switchPlayer(); return; }
+                const playerName = gameState.currentPlayer === 1 ?
+                    (document.getElementById('player1Name').textContent || 'Jogador 1') :
+                    (document.getElementById('player2Name').textContent || 'Jogador 2');
 
-            if (square.classList.contains('vf')) {
-                 setTimeout(() => { showCharacterCard(position); showVFQuestion(); }, 100);
-            } else if (square.classList.contains('normal')) {
-                 setTimeout(() => { showCharacterCard(position); showInformativeQuestion(); }, 100);
-            } else { // Start ou outra casa sem ação
-                 if (!gameState.gameEnded) { setTimeout(() => switchPlayer(), 500); }
-                 else { isSpinning = false; }
+                setTimeout(() => {
+                    createVictoryVisualEffect();
+                    showWinner(playerName);
+                }, 500);
+                return;
+            }
+
+            // Mostrar pergunta baseada no tipo de casa
+            setTimeout(() => {
+                const square = document.getElementById(`square-${player.position}`);
+                
+                if (square.classList.contains('vf')) {
+                    // Casa de Risco V/F
+                    showCharacterCard(player.position); // 1. Mostra a "figura"
+                    
+                    // ================================================================
+                    // ALTERAÇÃO 2: Espera a "figura" aparecer antes da pergunta
+                    // ================================================================
+                    setTimeout(() => {
+                        showVFQuestion(); 
+                    }, 600); // 600ms de espera (animação é 500ms)
+                                        
+                } else if (square.classList.contains('normal')) {
+                    // Casa Normal (Informativa V/F)
+                    showCharacterCard(player.position); // 1. Mostra a "figura"
+                    
+                    // ================================================================
+                    // ALTERAÇÃO 2: Espera a "figura" aparecer antes da pergunta
+                    // ================================================================
+                    setTimeout(() => {
+                        showInformativeQuestion(); 
+                    }, 600); // 600ms de espera
+                    
+                } else {
+                    // *** ESTA É A CORREÇÃO! ***
+                    // Se a casa não for 'vf' nem 'normal' (ex: Início),
+                    // apenas trocamos o turno, pois não há pergunta.
+                    if (!gameState.gameEnded) {
+                        switchPlayer();
+                    }
+                }
+            }, 500);
+        }
+
+        function updatePlayerDisplay() {
+            const player1 = gameState.players[1];
+            const player2 = gameState.players[2];
+
+            document.getElementById('player1Position').textContent = player1.position;
+            document.getElementById('player1Coins').textContent = player1.coins;
+            document.getElementById('player1Bombs').textContent = player1.bombs;
+
+            document.getElementById('player2Position').textContent = player2.position;
+            document.getElementById('player2Coins').textContent = player2.coins;
+            document.getElementById('player2Bombs').textContent = player2.bombs;
+
+            // Atualizar indicador de turno
+            const player1Card = document.getElementById('player1Card');
+            const player2Card = document.getElementById('player2Card');
+            const turnIndicator = document.getElementById('turnIndicator');
+
+            if (gameState.currentPlayer === 1) {
+                player1Card.classList.add('active');
+                player2Card.classList.remove('active');
+                turnIndicator.textContent = `Vez do ${document.getElementById('player1Name').textContent || 'Jogador 1'}`;
+            } else {
+                player1Card.classList.remove('active');
+                player2Card.classList.add('active');
+                turnIndicator.textContent = `Vez do ${document.getElementById('player2Name').textContent || 'Jogador 2'}`;
             }
         }
 
-        function updatePlayerDisplay() { /* ... (mantido com verificações null) ... */ const p1 = gameState.players[1], p2 = gameState.players[2]; const p1PosEl = document.getElementById('player1Position'); if (p1PosEl) p1PosEl.textContent = p1.position; const p1CoinsEl = document.getElementById('player1Coins'); if (p1CoinsEl) p1CoinsEl.textContent = p1.coins; const p1BombsEl = document.getElementById('player1Bombs'); if (p1BombsEl) p1BombsEl.textContent = p1.bombs; const p2PosEl = document.getElementById('player2Position'); if (p2PosEl) p2PosEl.textContent = p2.position; const p2CoinsEl = document.getElementById('player2Coins'); if (p2CoinsEl) p2CoinsEl.textContent = p2.coins; const p2BombsEl = document.getElementById('player2Bombs'); if (p2BombsEl) p2BombsEl.textContent = p2.bombs; const p1Card = document.getElementById('player1Card'), p2Card = document.getElementById('player2Card'), turnInd = document.getElementById('turnIndicator'); if(!p1Card || !p2Card || !turnInd) return; if (gameState.currentPlayer === 1) { p1Card.classList.add('active'); p2Card.classList.remove('active'); turnInd.textContent = `Vez do ${document.getElementById('player1Name')?.textContent || 'J1'}`; } else { p1Card.classList.remove('active'); p2Card.classList.add('active'); turnInd.textContent = `Vez do ${document.getElementById('player2Name')?.textContent || 'J2'}`; } }
-        function switchPlayer() { gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1; updatePlayerDisplay(); isSpinning = false; }
-        function showWinner(pName) { /* ... (mantido) ... */ const winDiv = document.createElement('div'); winDiv.className = 'winner-announcement'; winDiv.innerHTML = `🎉 ${pName} VENCEU! 🎉<br>Parabéns!`; const gameInfo = document.querySelector('.game-info'); if(gameInfo) { gameInfo.innerHTML = ''; gameInfo.appendChild(winDiv); } setTimeout(() => { showCustomModal('🏆 Fim de Jogo!', `${pName} chegou primeiro!`, [ {text: 'Jogar Novamente', action: () => { gameState = { currentPlayer: 1, players: { 1: { position: 1, coins: 0, bombs: 0 }, 2: { position: 1, coins: 0, bombs: 0 } }, gameEnded: false, musicPlaying: gameState.musicPlaying }; initializeBoard(); if(gameInfo) gameInfo.innerHTML = '<div class="turn-indicator" id="turnIndicator">Vez do J1</div>'; updatePlayerDisplay(); closeModal(); isSpinning = false; }} ]); }, 2000); }
-        function showInformativeQuestion() { /* ... (mantido) ... */ if (typeof perguntasInformativas === 'undefined' || perguntasInformativas.length === 0) { console.error("Erro: 'perguntasInformativas' não carregado."); closeModal(); return; } const idx = Math.floor(Math.random() * perguntasInformativas.length); currentQuestion = perguntasInformativas[idx]; currentQuestionType = 'informative'; document.getElementById('modalTitle').textContent = 'Pergunta (V/F)'; document.getElementById('modalQuestion').textContent = currentQuestion.pergunta; document.getElementById('modalButtons').innerHTML = `<div class="vf-buttons"><button class="btn btn-true" onclick="checkVFAnswer('V')">V</button><button class="btn btn-false" onclick="checkVFAnswer('F')">F</button></div>`; document.getElementById('questionModal').style.display = 'flex'; }
-        function showVFQuestion() { /* ... (mantido) ... */ if (typeof perguntasRisco === 'undefined' || perguntasRisco.length === 0) { console.error("Erro: 'perguntasRisco' não carregado."); closeModal(); return; } const idx = Math.floor(Math.random() * perguntasRisco.length); currentQuestion = perguntasRisco[idx]; currentQuestionType = 'vf'; document.getElementById('modalTitle').textContent = 'PERGUNTA DE RISCO (V/F)'; document.getElementById('modalQuestion').textContent = currentQuestion.pergunta; document.getElementById('modalButtons').innerHTML = `<div class="vf-buttons"><button class="btn btn-true" onclick="checkVFAnswer('V')">V</button><button class="btn btn-false" onclick="checkVFAnswer('F')">F</button></div>`; document.getElementById('questionModal').style.display = 'flex'; }
-        function showCharacterCard(position) { /* ... (mantido) ... */ const card = document.getElementById(`character-${position}`); if (card) { card.classList.add('show'); const avatar = card.querySelector('.character-avatar'); const msg = card.querySelector('.character-message'); const sq = document.getElementById(`square-${position}`); let baseImg = imgCasaNormal; if (sq?.classList.contains('vf')) { baseImg = imgCasaRisco; } if(avatar) avatar.style.backgroundImage = `url(${baseImg})`; if(msg) msg.textContent = '...'; card.classList.remove('happy', 'sad'); msg?.classList.remove('happy', 'sad'); } }
-        function updateCharacterReaction(position, isCorrect) { /* ... (mantido) ... */ const card = document.getElementById(`character-${position}`); if (card) { const avatar = card.querySelector('.character-avatar'); const msg = card.querySelector('.character-message'); let imgFile; if (isCorrect) { imgFile = imgReacaoAcerto; if(msg) msg.textContent = 'Boa! 😊'; msg?.classList.add('happy'); card.classList.add('happy'); } else { imgFile = imgReacaoErro; if(msg) msg.textContent = 'Ops! 😔'; msg?.classList.add('sad'); card.classList.add('sad'); } if(avatar) { avatar.style.backgroundImage = `url(${imgFile})`; avatar.classList.add('has-image'); avatar.textContent = ''; } card.classList.add('show'); setTimeout(() => { if (card && card.classList.contains('show')) { card.classList.remove('happy', 'sad'); msg?.classList.remove('happy', 'sad'); if(msg) msg.textContent = '...'; const sq = document.getElementById(`square-${position}`); let baseImg = imgCasaNormal; if (sq?.classList.contains('vf')) { baseImg = imgCasaRisco; } if(avatar) avatar.style.backgroundImage = `url(${baseImg})`; } }, 4000); } }
-        function checkVFAnswer(answer) { /* ... (mantido e ajustado) ... */ const isCorrect = answer === currentQuestion.resposta_correta; const p = gameState.players[gameState.currentPlayer]; updateCharacterReaction(p.position, isCorrect); let explanationDelay = 500; let errorPenaltyReturn = false; if (isCorrect) { p.coins++; document.getElementById('answerTitle').textContent = '✅ Correto! +1 Moeda'; setTimeout(() => { createCoinVisualEffect(); createStarsCelebration(); }, 500); } else { p.bombs++; document.getElementById('answerTitle').textContent = '❌ Incorreto! +1 Bomba'; setTimeout(() => { createErrorVisualEffect(); createExplosion(); }, 500); if (currentQuestionType === 'vf') { errorPenaltyReturn = true; document.getElementById('answerTitle').textContent = '❌ RISCO!'; document.getElementById('answerText').innerHTML = `${currentQuestion.explicacao}<br><br><strong>Volte para o início!</strong>`; explanationDelay = 2000; setTimeout(() => { const curSq = document.getElementById(`square-${p.position}`); const pEl = curSq?.querySelector(`.player.player${gameState.currentPlayer}`); if (pEl) pEl.remove(); p.position = 1; const startSq = document.getElementById('square-1'); const newP = document.createElement('div'); newP.className = `player player${gameState.currentPlayer}`; newP.textContent = gameState.currentPlayer; startSq?.appendChild(newP); updatePlayerDisplay(); closeModal(); }, 1500 + explanationDelay); } else { document.getElementById('answerText').textContent = currentQuestion.explicacao; } } if (currentQuestionType !== 'vf' || isCorrect) { document.getElementById('answerText').textContent = currentQuestion.explicacao; } updatePlayerDisplay(); document.getElementById('questionModal').style.display = 'none'; if (!errorPenaltyReturn) { setTimeout(() => { document.getElementById('answerModal').style.display = 'flex'; }, explanationDelay > 500 ? 600 : 100); } }
-        // SDK Functions (Stubs)
-        async function render(config) { /* ... mantido ... */ const cfg = { ...defaultConfig, ...config }; document.getElementById('gameTitle').textContent = cfg.game_title; document.getElementById('player1Name').textContent = cfg.player1_name; document.getElementById('player2Name').textContent = cfg.player2_name; document.getElementById('instructionsText').textContent = cfg.instructions_text; updatePlayerDisplay(); }
-        function mapToCapabilities(config) { return {}; }
-        function mapToEditPanelValues(config) { return new Map(); }
+        function switchPlayer() {
+            gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+            updatePlayerDisplay();
+        }
 
-        // --- Inicialização ---
+        function showWinner(playerName) {
+            const winnerDiv = document.createElement('div');
+            winnerDiv.className = 'winner-announcement';
+            winnerDiv.innerHTML = `🎉 ${playerName} VENCEU! 🎉<br>Parabéns por completar o tabuleiro de educação sexual!`;
+
+            const gameInfo = document.querySelector('.game-info');
+            // Limpar indicador de turno antigo
+            gameInfo.innerHTML = ''; 
+            gameInfo.appendChild(winnerDiv);
+
+            setTimeout(() => {
+                showCustomModal('🏆 Fim de Jogo!', `${playerName} chegou primeiro ao final! Parabéns por aprender sobre educação sexual de forma divertida!`, [
+                    {text: 'Jogar Novamente', action: () => {
+                        gameState = {
+                            currentPlayer: 1,
+                            players: {
+                                1: { position: 1, coins: 0, bombs: 0 },
+                                2: { position: 1, coins: 0, bombs: 0 }
+                            },
+                            gameEnded: false,
+                            musicPlaying: gameState.musicPlaying
+                        };
+                        initializeBoard();
+                        // Recriar indicador de turno
+                        gameInfo.innerHTML = '<div class="turn-indicator" id="turnIndicator">Vez do Jogador 1</div>';
+                        updatePlayerDisplay();
+                        closeModal();
+                    }}
+                ]);
+            }, 2000);
+        }
+
+        // Mostra pergunta das casas NORMAIS
+        function showInformativeQuestion() {
+            // Acesso ao array perguntasInformativas que está neste <script>
+            if (typeof perguntasInformativas === 'undefined' || perguntasInformativas.length === 0) {
+                console.error("Erro: O array 'perguntasInformativas' não foi carregado ou está vazio.");
+                closeModal(); // Troca o turno se não houver perguntas
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * perguntasInformativas.length);
+            currentQuestion = perguntasInformativas[randomIndex];
+            currentQuestionType = 'informative';
+
+            document.getElementById('modalTitle').textContent = 'Pergunta (V/F)';
+            document.getElementById('modalQuestion').textContent = currentQuestion.pergunta;
+            document.getElementById('modalButtons').innerHTML = `
+                <div class="vf-buttons">
+                    <button class="btn btn-true" onclick="checkVFAnswer('V')">Verdadeiro</button>
+                    <button class="btn btn-false" onclick="checkVFAnswer('F')">Falso</button>
+                </div>
+            `;
+
+            document.getElementById('questionModal').style.display = 'flex';
+        }
+
+        // Mostra pergunta das casas de RISCO (V/F)
+        function showVFQuestion() {
+            // Acesso ao array perguntasRisco que está neste <script>
+            if (typeof perguntasRisco === 'undefined' || perguntasRisco.length === 0) {
+                console.error("Erro: O array 'perguntasRisco' não foi carregado ou está vazio.");
+                closeModal(); // Troca o turno se não houver perguntas
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * perguntasRisco.length);
+            currentQuestion = perguntasRisco[randomIndex];
+            currentQuestionType = 'vf'; // 'vf' indica uma casa de risco
+
+            document.getElementById('modalTitle').textContent = 'PERGUNTA DE RISCO (V/F)';
+            document.getElementById('modalQuestion').textContent = currentQuestion.pergunta;
+            document.getElementById('modalButtons').innerHTML = `
+                <div class="vf-buttons">
+                    <button class="btn btn-true" onclick="checkVFAnswer('V')">Verdadeiro</button>
+                    <button class="btn btn-false" onclick="checkVFAnswer('F')">Falso</button>
+                </div>
+            `;
+
+            document.getElementById('questionModal').style.display = 'flex';
+        }
+
+        function showCharacterCard(position) {
+            const characterCard = document.getElementById(`character-${position}`);
+            if (characterCard) {
+                characterCard.classList.add('show');
+            }
+        }
+
+        function updateCharacterReaction(position, isCorrect) {
+            const characterCard = document.getElementById(`character-${position}`);
+            if (characterCard) {
+                const avatar = characterCard.querySelector('.character-avatar');
+                const message = characterCard.querySelector('.character-message');
+
+                let imageFile;
+
+                if (isCorrect) {
+                    // Usa a imagem de acerto (YES!)
+                    imageFile = imageAcerto; 
+                    message.textContent = 'Parabéns! 😊';
+                    message.classList.add('happy');
+                    characterCard.classList.add('happy');
+                } else {
+                    // Usa a imagem de erro/dúvida
+                    imageFile = imageErro; 
+                    message.textContent = 'Que pena! 😔';
+                    message.classList.add('sad');
+                    characterCard.classList.add('sad');
+                }
+
+                // Aplicar imagem de reação
+                avatar.style.backgroundImage = `url(${imageFile})`;
+                avatar.classList.add('has-image');
+                avatar.textContent = '';
+
+                // Mostrar reação e manter visível
+                characterCard.classList.add('show');
+
+                // Resetar para estado neutro após 5 segundos, mas manter visível
+                setTimeout(() => {
+                    if (characterCard) { // Verifica se o card ainda existe (evita erro ao reiniciar o jogo)
+                        characterCard.classList.remove('happy', 'sad');
+                        message.classList.remove('happy', 'sad');
+                        message.textContent = 'Boa sorte!';
+
+                        // Volta para a imagem neutra de pergunta
+                        avatar.style.backgroundImage = `url(${imagePergunta})`;
+                    }
+                }, 5000);
+            }
+        }
+
+        function checkVFAnswer(answer) {
+            const isCorrect = answer === currentQuestion.resposta_correta;
+            const player = gameState.players[gameState.currentPlayer];
+
+            // Atualizar reação do personagem
+            updateCharacterReaction(player.position, isCorrect);
+
+            if (isCorrect) {
+                player.coins++;
+                document.getElementById('answerTitle').textContent = '✅ Correto! +1 Moeda';
+
+                // Efeitos visuais e sonoros para acerto
+                setTimeout(() => {
+                    createCoinVisualEffect();
+                    createStarsCelebration();
+                }, 500);
+            } else {
+                player.bombs++;
+                document.getElementById('answerTitle').textContent = '❌ Incorreto! +1 Bomba';
+
+                // Efeitos visuais e sonoros para erro
+                setTimeout(() => {
+                    createErrorVisualEffect();
+                    createExplosion();
+                }, 500);
+                
+                // **** LÓGICA DE PENALIDADE DAS CASAS DE RISCO ****
+                // Se errar uma pergunta do tipo 'vf' (Risco), volta ao início
+                if (currentQuestionType === 'vf') {
+                    document.getElementById('answerTitle').textContent = '❌ RISCO! Você errou!';
+                    document.getElementById('answerText').innerHTML = `${currentQuestion.explicacao}<br><br><strong>Você voltará para a casa 1!</strong>`;
+                    
+                    // Ação de voltar ao início
+                    setTimeout(() => {
+                        // Remover jogador da posição atual
+                        const currentSquare = document.getElementById(`square-${player.position}`);
+                        const playerElement = currentSquare.querySelector(`.player.player${gameState.currentPlayer}`);
+                        if (playerElement) playerElement.remove();
+
+                        // Mover para posição 1
+                        player.position = 1;
+                        const startSquare = document.getElementById('square-1');
+                        const newPlayer = document.createElement('div');
+                        newPlayer.className = `player player${gameState.currentPlayer}`;
+                        newPlayer.textContent = gameState.currentPlayer;
+                        startSquare.appendChild(newPlayer);
+                        
+                        updatePlayerDisplay();
+                    }, 1500); // Dá tempo para o efeito de explosão
+                } else {
+                     document.getElementById('answerText').textContent = currentQuestion.explicacao;
+                }
+                
+            }
+            
+            // Se não for uma casa de risco, apenas mostra a explicação
+            if (currentQuestionType !== 'vf' || isCorrect) {
+                document.getElementById('answerText').textContent = currentQuestion.explicacao;
+            }
+
+            updatePlayerDisplay();
+
+            document.getElementById('questionModal').style.display = 'none';
+            document.getElementById('answerModal').style.display = 'flex';
+        }
+
+        function showAnswer() {
+            // Esta função não é usada, o botão chama checkVFAnswer() diretamente.
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').style.display = 'none';
+            document.getElementById('answerModal').style.display = 'none';
+
+            // Alternar para o próximo jogador após fechar o modal
+            if (!gameState.gameEnded) {
+                switchPlayer();
+            }
+        }
+
+        function showCustomModal(title, message, buttons) {
+            document.getElementById('answerTitle').textContent = title;
+            document.getElementById('answerText').textContent = message;
+
+            const buttonContainer = document.querySelector('#answerModal .modal-buttons');
+            buttonContainer.innerHTML = '';
+
+            buttons.forEach(button => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-primary';
+                btn.textContent = button.text;
+                btn.onclick = button.action;
+                buttonContainer.appendChild(btn);
+            });
+
+            document.getElementById('answerModal').style.display = 'flex';
+        }
+
+        // Configuração do Element SDK
+        async function render(config) {
+            const gameTitle = config.game_title || defaultConfig.game_title;
+            const player1Name = config.player1_name || defaultConfig.player1_name;
+            const player2Name = config.player2_name || defaultConfig.player2_name;
+            const instructionsText = config.instructions_text || defaultConfig.instructions_text;
+
+            document.getElementById('gameTitle').textContent = gameTitle;
+            document.getElementById('player1Name').textContent = player1Name;
+            document.getElementById('player2Name').textContent = player2Name;
+            document.getElementById('instructionsText').textContent = instructionsText;
+
+            // Atualizar indicador de turno com os novos nomes
+            updatePlayerDisplay();
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [
+                    {
+                        get: () => config.primary_color || '#4299e1',
+                        set: (value) => {
+                            config.primary_color = value;
+                            if (window.elementSdk) {
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        }
+                    }
+                ],
+                borderables: [],
+                fontEditable: {
+                    get: () => config.font_family || 'Segoe UI',
+                    set: (value) => {
+                        config.font_family = value;
+                        if (window.elementSdk) {
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    }
+                },
+                fontSizeable: {
+                    get: () => config.font_size || 16,
+                    set: (value) => {
+                        config.font_size = value;
+                        if (window.elementSdk) {
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["game_title", config.game_title || defaultConfig.game_title],
+                ["player1_name", config.player1_name || defaultConfig.player1_name],
+                ["player2_name", config.player2_name || defaultConfig.player2_name],
+                ["instructions_text", config.instructions_text || defaultConfig.instructions_text]
+            ]);
+        }
+
+        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
-            const rouletteElement = document.getElementById('roulette');
-            if(rouletteElement) { rouletteElement.addEventListener('click', spinRoulette); }
-            else { console.error("Elemento roleta não encontrado!"); }
-
             initializeBoard();
             updatePlayerDisplay();
 
-            const videoModal = document.getElementById('videoModal');
-            if (videoModal) videoModal.style.display = 'flex';
-            const introVideoElement = document.getElementById('introVideo');
-             if (introVideoElement) {
-                 introVideoElement.play().catch(e => { console.log("Auto-play bloqueado.", e); });
-             }
+            // Tenta iniciar o vídeo automaticamente.
+            introVideo.play().catch(e => {
+                console.log("Auto-play do vídeo bloqueado. O usuário deve clicar em 'Começar o Jogo'.", e);
+            });
 
-            if (typeof window.elementSdk !== 'undefined' && window.elementSdk) { window.elementSdk.init({ defaultConfig, render, mapToCapabilities, mapToEditPanelValues }); }
-            else { render(defaultConfig); console.log("SDK não encontrado."); }
-
-            let resizeTimeout; window.addEventListener('resize', () => { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(initializeBoard, 250); });
-            console.log("Caminhos Imagens:", imgCasaNormal, imgCasaRisco); // Log para debug
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    render,
+                    mapToCapabilities,
+                    mapToEditPanelValues
+                });
+            }
         });
     </script>
-
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992b1b96441302fc',t:'MTc2MTE1ODI2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
